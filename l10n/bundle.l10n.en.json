@@ -1,0 +1,13 @@
+{
+    "info.configure-i18n-folder.configure.title": "配置 i18n",
+    "info.configure-i18n-folder.configure.button": "配置 i18n",
+    "warning.update-i18n.cannot-find-iso.window": "未知的语言，不在 ISO639 编码中",
+    "info.lsp.common.undefined": "未定义",
+    "info.lsp.common.empty": "空的定义",
+    "info.lsp.common.goto-definition": "前往定义",
+    "warning.lsp.get-main.cannot-find-main-use-replacer-instead": "无法找到 i18n-haru.main 的文案文件，使用如下语言替代",
+    "info.lsp.detail.key": "i18n 键值",
+    "error.lsp.parse.fail-parse-json": "解析 JSON 失败",
+    "info.command.add-token.title": "添加 i18n 文案",
+    "error.command.add-token.cannot-get-default-i18n-item": "无法获得主语言的 i18n 文案"
+}
