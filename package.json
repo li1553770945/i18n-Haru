@@ -6,6 +6,10 @@
     "engines": {
         "vscode": "^1.94.0"
     },
+    "readme": "README.md",
+    "repository": {
+        "url": "https://github.com/LSTM-Kirigaya/i18n-Haru"
+    },
     "l10n": "l10n",
     "keywords": [
         "i18n",
