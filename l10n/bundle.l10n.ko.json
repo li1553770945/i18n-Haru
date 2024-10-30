@@ -1,0 +1,22 @@
+{
+    "info.configure-i18n-folder.configure.title": "i18n 구성",
+    "info.configure-i18n-folder.configure.button": "i18n 구성",
+    "warning.update-i18n.cannot-find-iso.window": "알 수 없는 언어, ISO639 인코딩에 없음",
+    "info.lsp.common.undefined": "정의되지 않음",
+    "info.lsp.common.empty": "빈 정의",
+    "info.lsp.common.goto-definition": "정의로 이동",
+    "warning.lsp.get-main.cannot-find-main-use-replacer-instead": "i18n-haru.main 텍스트 파일을 찾을 수 없음, 다음 언어를 대신 사용",
+    "info.lsp.detail.key": "i18n 키",
+    "error.lsp.parse.fail-parse-json": "JSON 파싱 실패",
+    "info.command.add-token.title": "i18n 텍스트 추가",
+    "error.command.add-token.cannot-get-default-i18n-item": "기본 언어의 i18n 텍스트를 가져올 수 없음",
+    "error.command.add-token.repeat-i18n-token": "중복된 i18n 토큰",
+    "info.update-i18n.make-prefix.title": "i18n: 가장 긴 접두사 파싱",
+    "info.update-i18n.parse-iso.title": "i18n: i18n 텍스트 파싱 중",
+    "info.command.delete-token.title": "i18n 텍스트 삭제",
+    "info.command.delete-token.placeholder": "삭제할 텍스트 토큰 입력",
+    "info.lsp.linter.redundant-token": "기본 언어의 텍스트와 비교하여 이는 중복된 텍스트 토큰입니다",
+    "info.lsp.linter.lacked-token": "기본 언어의 텍스트와 비교하여 다음 텍스트 토큰이 누락되었습니다",
+    "info.lsp.code-action.use-main-for-current-supply": "기본 언어의 텍스트를 사용하여 이 텍스트의 누락된 부분을 보충하고 중복 토큰을 제거합니다",
+    "info.lsp.code-action.use-main-for-all-supply": "기본 언어의 텍스트를 사용하여 모든 텍스트의 누락된 부분을 보충하고 중복 토큰을 제거합니다"
+}

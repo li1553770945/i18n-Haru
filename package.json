@@ -7,9 +7,18 @@
         "vscode": "^1.94.0"
     },
     "l10n": "l10n",
+    "keywords": [
+        "i18n",
+        "haru",
+        "kirigaya",
+        "vue i18n",
+        "rust i18n",
+        "typescript i18n"
+    ],
     "categories": [
         "Other"
     ],
+    "icon": "icons/icon.png",
     "activationEvents": [
         "onLanguage:typescript",
         "onLanguage:vue",

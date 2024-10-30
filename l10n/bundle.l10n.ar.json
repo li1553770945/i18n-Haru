@@ -1,0 +1,22 @@
+{
+    "info.configure-i18n-folder.configure.title": "تكوين i18n",
+    "info.configure-i18n-folder.configure.button": "تكوين i18n",
+    "warning.update-i18n.cannot-find-iso.window": "لغة غير معروفة، ليست في ترميز ISO639",
+    "info.lsp.common.undefined": "غير معرف",
+    "info.lsp.common.empty": "تعريف فارغ",
+    "info.lsp.common.goto-definition": "انتقل إلى التعريف",
+    "warning.lsp.get-main.cannot-find-main-use-replacer-instead": "لا يمكن العثور على ملف النص الرئيسي i18n-haru.main، استخدام اللغة التالية كبديل",
+    "info.lsp.detail.key": "مفتاح i18n",
+    "error.lsp.parse.fail-parse-json": "فشل في تحليل JSON",
+    "info.command.add-token.title": "إضافة نص i18n",
+    "error.command.add-token.cannot-get-default-i18n-item": "لا يمكن الحصول على نص i18n الرئيسي",
+    "error.command.add-token.repeat-i18n-token": "رمز i18n مكرر",
+    "info.update-i18n.make-prefix.title": "i18n: تحليل البادئة الأطول",
+    "info.update-i18n.parse-iso.title": "i18n: تحليل نص i18n",
+    "info.command.delete-token.title": "حذف نص i18n",
+    "info.command.delete-token.placeholder": "أدخل رمز النص المراد حذفه",
+    "info.lsp.linter.redundant-token": "هذا رمز نص زائد مقارنة بنص اللغة الأساسية",
+    "info.lsp.linter.lacked-token": "الرموز التالية مفقودة مقارنة بنص اللغة الأساسية",
+    "info.lsp.code-action.use-main-for-current-supply": "استخدم نص اللغة الأساسية لتعويض الجزء المفقود من هذا النص وإزالة الرموز الزائدة",
+    "info.lsp.code-action.use-main-for-all-supply": "استخدم نص اللغة الأساسية لتعويض جميع الأجزاء المفقودة من النص وإزالة الرموز الزائدة"
+}

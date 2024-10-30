@@ -1,0 +1,22 @@
+{
+    "info.configure-i18n-folder.configure.title": "i18n konfigurieren",
+    "info.configure-i18n-folder.configure.button": "i18n konfigurieren",
+    "warning.update-i18n.cannot-find-iso.window": "Unbekannte Sprache, nicht in ISO639-Kodierung",
+    "info.lsp.common.undefined": "Undefiniert",
+    "info.lsp.common.empty": "Leere Definition",
+    "info.lsp.common.goto-definition": "Gehe zur Definition",
+    "warning.lsp.get-main.cannot-find-main-use-replacer-instead": "i18n-haru.main Kopierdatei nicht gefunden, verwende stattdessen die folgende Sprache",
+    "info.lsp.detail.key": "i18n Schlüssel",
+    "error.lsp.parse.fail-parse-json": "JSON-Parsing fehlgeschlagen",
+    "info.command.add-token.title": "i18n Kopie hinzufügen",
+    "error.command.add-token.cannot-get-default-i18n-item": "Hauptsprache i18n Kopie kann nicht abgerufen werden",
+    "error.command.add-token.repeat-i18n-token": "Doppelter i18n Token",
+    "info.update-i18n.make-prefix.title": "i18n: Längsten Präfix parsen",
+    "info.update-i18n.parse-iso.title": "i18n: i18n Kopie wird geparst",
+    "info.command.delete-token.title": "i18n Kopie löschen",
+    "info.command.delete-token.placeholder": "Geben Sie den zu löschenden Kopie-Token ein",
+    "info.lsp.linter.redundant-token": "Dies ist ein redundanter Kopie-Token im Vergleich zur Basissprache",
+    "info.lsp.linter.lacked-token": "Im Vergleich zur Basissprache fehlen die folgenden Kopie-Token",
+    "info.lsp.code-action.use-main-for-current-supply": "Verwenden Sie die Kopie der Basissprache, um den fehlenden Teil dieser Kopie zu ergänzen und redundante Token zu entfernen",
+    "info.lsp.code-action.use-main-for-all-supply": "Verwenden Sie die Kopie der Basissprache, um alle fehlenden Teile der Kopie zu ergänzen und redundante Token zu entfernen"
+}

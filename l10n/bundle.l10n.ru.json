@@ -1,0 +1,22 @@
+{
+    "info.configure-i18n-folder.configure.title": "Настроить i18n",
+    "info.configure-i18n-folder.configure.button": "Настроить i18n",
+    "warning.update-i18n.cannot-find-iso.window": "Неизвестный язык, не в кодировке ISO639",
+    "info.lsp.common.undefined": "Не определено",
+    "info.lsp.common.empty": "Пустое определение",
+    "info.lsp.common.goto-definition": "Перейти к определению",
+    "warning.lsp.get-main.cannot-find-main-use-replacer-instead": "Не удалось найти файл копии i18n-haru.main, используйте следующий язык вместо этого",
+    "info.lsp.detail.key": "Ключ i18n",
+    "error.lsp.parse.fail-parse-json": "Не удалось разобрать JSON",
+    "info.command.add-token.title": "Добавить копию i18n",
+    "error.command.add-token.cannot-get-default-i18n-item": "Не удалось получить копию i18n для основного языка",
+    "error.command.add-token.repeat-i18n-token": "Дублирующийся i18n токен",
+    "info.update-i18n.make-prefix.title": "i18n: Разбор самого длинного префикса",
+    "info.update-i18n.parse-iso.title": "i18n: Разбор копии i18n",
+    "info.command.delete-token.title": "Удалить копию i18n",
+    "info.command.delete-token.placeholder": "Введите токен копии для удаления",
+    "info.lsp.linter.redundant-token": "Это избыточный токен копии по сравнению с копией на основном языке",
+    "info.lsp.linter.lacked-token": "Следующие токены копии отсутствуют по сравнению с копией на основном языке",
+    "info.lsp.code-action.use-main-for-current-supply": "Используйте копию на основном языке для пополнения недостающей части этой копии и удаления избыточных токенов",
+    "info.lsp.code-action.use-main-for-all-supply": "Используйте копию на основном языке для пополнения всех недостающих частей копии и удаления избыточных токенов"
+}

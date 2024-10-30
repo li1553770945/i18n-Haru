@@ -1,0 +1,22 @@
+{
+    "info.configure-i18n-folder.configure.title": "Configurer i18n",
+    "info.configure-i18n-folder.configure.button": "Configurer i18n",
+    "warning.update-i18n.cannot-find-iso.window": "Langue inconnue, non dans l'encodage ISO639",
+    "info.lsp.common.undefined": "Non défini",
+    "info.lsp.common.empty": "Définition vide",
+    "info.lsp.common.goto-definition": "Aller à la définition",
+    "warning.lsp.get-main.cannot-find-main-use-replacer-instead": "Fichier de copie i18n-haru.main introuvable, utiliser la langue suivante à la place",
+    "info.lsp.detail.key": "Clé i18n",
+    "error.lsp.parse.fail-parse-json": "Échec de l'analyse JSON",
+    "info.command.add-token.title": "Ajouter une copie i18n",
+    "error.command.add-token.cannot-get-default-i18n-item": "Impossible d'obtenir la copie i18n de la langue principale",
+    "error.command.add-token.repeat-i18n-token": "Token i18n en double",
+    "info.update-i18n.make-prefix.title": "i18n: Analyser le préfixe le plus long",
+    "info.update-i18n.parse-iso.title": "i18n: Analyse de la copie i18n en cours",
+    "info.command.delete-token.title": "Supprimer la copie i18n",
+    "info.command.delete-token.placeholder": "Entrez le token de copie à supprimer",
+    "info.lsp.linter.redundant-token": "Ceci est un token de copie redondant par rapport à la copie de la langue de base",
+    "info.lsp.linter.lacked-token": "Les tokens de copie suivants sont manquants par rapport à la copie de la langue de base",
+    "info.lsp.code-action.use-main-for-current-supply": "Utilisez la copie de la langue de base pour compléter la partie manquante de cette copie et supprimer les tokens redondants",
+    "info.lsp.code-action.use-main-for-all-supply": "Utilisez la copie de la langue de base pour compléter toutes les parties manquantes de la copie et supprimer les tokens redondants"
+}

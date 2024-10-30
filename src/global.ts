@@ -57,7 +57,11 @@ export async function updateAll() {
 
     GlobalConfig.main = main.toLowerCase();
 
-    GlobalConfig.display = i18nSetting.get<string>('display') || '';
+    let display = i18nSetting.get<string>('display') || '';
+    if (display.length === 0) {
+        display = main;
+    }
+    GlobalConfig.display = display;
     GlobalConfig.parseMode = i18nSetting.get<IParseMode>('lang') || 'json';
 
     await updateI18nFromRoot();
