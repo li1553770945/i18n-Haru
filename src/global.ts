@@ -358,6 +358,7 @@ function getFirstOneI18nItem() {
     for (const item of I18nTextMap.values()) {
         return item;
     }
+    
     return undefined;
 }
 

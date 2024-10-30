@@ -3,6 +3,10 @@
     "displayName": "i18n Haru",
     "description": "A better i18n extension for Vscode to develop js, ts, vue and so on",
     "version": "0.0.1",
+    "author": {
+        "email": "1193466151@qq.com",
+        "name": "kirigaya"
+    },
     "engines": {
         "vscode": "^1.94.0"
     },

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { defaultRange, getDefaultI18nItem, I18nTextMap } from '../global';
+import { defaultRange, getDefaultI18nItem, GlobalConfig, I18nTextMap } from '../global';
 
 export enum JsonSuggest {
     Lack,
@@ -13,7 +13,7 @@ class I18nJsonDiagnostic {
     }
 
     async lint(filepath: string) {
-        if (!filepath.endsWith('.json')) {
+        if (!filepath.endsWith('.json') || !filepath.startsWith(GlobalConfig.root)) {
             return;
         }
         const items = [];

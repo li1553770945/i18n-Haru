@@ -6,23 +6,23 @@
 
 ### 悬停提示 和 inlay hints
 
-![](https://picx.zhimg.com/80/v2-82b8c18cd2711ba8c32cdd3b28db5261_1440w.png)
+![](https://pic2.zhimg.com/v2-237209c8beaa3e596d33c063fc00d3e7_r.jpg)
 
 ### 自动补全
 
-![](https://pic1.zhimg.com/80/v2-e5be8dc5eae4f98adc4e63eb2f5cf0bd_1440w.jpeg)
+![](https://pic1.zhimg.com/v2-45fbb658d6010b1d959778ca596ae972_r.jpg)
 
 ### 定义跳转
 
-![](https://picx.zhimg.com/80/v2-e354c132b862c4f3697ff3e879b1f417_1440w.png)
+![](https://pic1.zhimg.com/v2-612537655266fc4b769c7129cf173f02_r.jpg)
 
 ### 诊断器
 
-![](https://picx.zhimg.com/v2-ac7598133688b3d319c9401f0ed5d3c5_r.jpg)
+![](https://pica.zhimg.com/v2-258d1d5080256e7f818cb108461070de_r.jpg)
 
 ### 快速修复
 
-![](https://pic4.zhimg.com/80/v2-da391548d13d860cb3760a0e024fc627_1440w.webp)
+![](https://picx.zhimg.com/v2-b27637a4b41fae90e236fd85a6899e39_r.jpg)
 
 ### 快速创建 i18n token
 
@@ -34,7 +34,7 @@
 
 如果在 json 文件中，可以通过点击右上角的 i18n 删除按钮同时在所有的 i18n 文件中删除某个 token：
 
-![](https://pic3.zhimg.com/v2-6194363b9eb4747a53396a681b1be55c_r.jpg)
+![](https://pic4.zhimg.com/v2-3b172ec3cdfbbe2c211fabcfa837dc07_r.jpg)
 
 ---
 
