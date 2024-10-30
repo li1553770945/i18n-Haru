@@ -9,5 +9,9 @@
     "info.lsp.detail.key": "i18n 键值",
     "error.lsp.parse.fail-parse-json": "解析 JSON 失败",
     "info.command.add-token.title": "添加 i18n 文案",
-    "error.command.add-token.cannot-get-default-i18n-item": "无法获得主语言的 i18n 文案"
+    "error.command.add-token.cannot-get-default-i18n-item": "无法获得主语言的 i18n 文案",
+    "error.command.add-token.repeat-i18n-token": "重复的 i18n token",
+    "info.update-i18n.make-prefix.title": "i18n: 解析最长前缀",
+    "info.update-i18n.parse-iso.title": "i18n: 解析 i18n 文案中",
+    "info.command.delete-token.title": "删除 i18n 文案"
 }

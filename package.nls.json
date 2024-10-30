@@ -7,5 +7,7 @@
     "i18n-haru.format.title": "",
     "i18n-haru.goto-undefined-key.title": "",
     "i18n-haru.line-hint-max-length.title": "",
-    "i18n-haru.add-token.title": ""
+    "i18n-haru.add-token.title": "",
+    "i18n-haru.t-quote.title": "",
+    "i18n-haru.delete-token.title": ""
 }

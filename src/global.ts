@@ -5,6 +5,7 @@ import * as YAML from 'js-yaml';
 import { ISOCodeArray } from './i18n';
 import { parseJson, ParseResult, parseYaml } from './parse';
 import { OutgoingMessage } from 'http';
+import { jsonSuggestor } from './lsp/diagnostics';
 
 type IParseMode = 'json' | 'yaml'
 export const defaultRange = new vscode.Range(
@@ -64,15 +65,21 @@ export async function updateAll() {
 
 export async function initialise(context: vscode.ExtensionContext) {
     const workspaceFolders = vscode.workspace.workspaceFolders;
+    const { t } = vscode.l10n;
 
     if (workspaceFolders) {
         const workspaceFolder = workspaceFolders[0];
         const settingPath = path.join(workspaceFolder.uri.fsPath, '.vscode', 'settings.json');
         if (!fs.existsSync(settingPath)) {
-            fs.writeFileSync(settingPath, JSON.stringify({}, null, '  '));
+            fs.writeFileSync(settingPath, JSON.stringify({}, null, '    '));
         }
 
         await updateAll();
+
+        // 初始化 诊断器
+        for (const [_, item] of I18nTextMap.entries()) {
+            await jsonSuggestor.lint(item.file);
+        }
 
         // 配置文件发生变化时
         vscode.workspace.onDidChangeConfiguration(async event => {
@@ -81,16 +88,81 @@ export async function initialise(context: vscode.ExtensionContext) {
             }
         });
 
+        // 重命名
+        vscode.workspace.onDidRenameFiles(async event => {
+            const newEvent = { files: event.files.map(file => file.oldUri) };
+            const i18nRootFiles = getI18nFilesFromEvent(newEvent);
+            if (i18nRootFiles.length > 0) {
+                await updateAll();
+            }
+        });
+
+        // i18n 文件发生新增时
+        vscode.workspace.onDidCreateFiles(async event => {
+            const i18nRootFiles = getI18nFilesFromEvent(event);
+            if (i18nRootFiles.length === 0) {
+                return;
+            }
+
+            const i18nFiles: string[] = [];
+            const parseSuffixs = getParseSuffix();
+
+            for (const file of fs.readdirSync(GlobalConfig.root)) {
+                let extname = file.split('.').at(-1);
+                if (extname === undefined) {
+                    continue;
+                }
+                if (parseSuffixs !== undefined && !parseSuffixs.includes(extname.toLowerCase())) {
+                    continue;   
+                }
+                i18nFiles.push(file);
+            }
+
+            // 去除公共前缀和后缀
+            const prefix = await vscode.window.withProgress({
+                title: t('info.update-i18n.make-prefix.title'),
+                location: vscode.ProgressLocation.Window
+            }, async (progress: vscode.Progress<{ message: string, increment: number }>, token: vscode.CancellationToken) => {
+                return longestCommonPrefix(i18nFiles);
+            });
+
+            for (const file of i18nRootFiles) {
+                const filename = path.basename(file);
+                const i18nTextItem = await makeI18nTextItem(filename, prefix);
+                if (i18nTextItem) {
+                    I18nTextMap.set(i18nTextItem.code, i18nTextItem);
+                }
+            }
+        });
+
+        // i18n 文件删除时
+        vscode.workspace.onDidDeleteFiles(async event => {
+            const i18nRootFiles = getI18nFilesFromEvent(event);
+
+            if (i18nRootFiles.length === 0) {
+                return;
+            }
+
+            const i18nRootFilesSet = new Set<string>(i18nRootFiles);
+
+            const deleteCodes = [];
+            for (const [code, item] of I18nTextMap.entries()) {
+                if (i18nRootFilesSet.has(item.file)) {
+                    deleteCodes.push(code);
+                }
+            }
+            deleteCodes.forEach(code => I18nTextMap.delete(code));
+        });
 
         // i18n 文件发生变化时，暂时不考虑 rename 的问题
         vscode.workspace.onDidChangeTextDocument(async event => {
             const filePath = event.document.uri.fsPath;
-            const extname = path.extname(filePath).slice(1).toLowerCase();
-            const parseSuffixs = getParseSuffix();
-            if (parseSuffixs !== undefined && !parseSuffixs.includes(extname)) {
-                return;
-            }
             if (filePath.startsWith(GlobalConfig.root)) {
+                const extname = path.extname(filePath).slice(1).toLowerCase();
+                const parseSuffixs = getParseSuffix();
+                if (parseSuffixs !== undefined && !parseSuffixs.includes(extname)) {
+                    return;
+                }
                 // 在已有的数据结构中找到和这个路径一致的 item
                 // 因为 i18n 文件数量绝对不会超过1000，所以直接 for 循环几乎不影响性能
                 const items = [];
@@ -110,7 +182,36 @@ export async function initialise(context: vscode.ExtensionContext) {
                         file: filePath,
                         content: res.content,
                         keyRanges: res.keyRanges
-                    })
+                    });
+                    
+                    // 诊断
+                    if (code === GlobalConfig.main) {
+                        // 主语言需要刷新所有的 code
+                        for (const [_, item] of I18nTextMap.entries()) {
+                            await jsonSuggestor.lint(item.file);
+                        }
+                    } else {
+                        // 非主语言只需要刷新自己
+                        await jsonSuggestor.lint(filePath);
+                    }
+                }
+            }
+        });
+
+        // 打开文件
+        vscode.workspace.onDidOpenTextDocument(async document => {
+            const filepath = document.uri.fsPath;
+            if (filepath.startsWith(GlobalConfig.root)) {
+                await jsonSuggestor.lint(filepath);
+            }
+        });
+
+        // 切换活动区域
+        vscode.window.onDidChangeActiveTextEditor(async editor => {
+            if (editor?.document) {
+                const filepath = editor.document.uri.fsPath;
+                if (filepath.startsWith(GlobalConfig.root)) {
+                    await jsonSuggestor.lint(filepath);
                 }
             }
         })
@@ -225,34 +326,25 @@ async function updateI18nFromRoot() {
     }
 
     // 去除公共前缀和后缀
-    const prefix = longestCommonPrefix(i18nFiles);
+    const prefix = await vscode.window.withProgress({
+        title: t('info.update-i18n.make-prefix.title'),
+        location: vscode.ProgressLocation.Window
+    }, async (progress: vscode.Progress<{ message: string, increment: number }>, token: vscode.CancellationToken) => {
+        return longestCommonPrefix(i18nFiles);
+    });
 
-    for (const file of i18nFiles) {
-        let validFileString = file.slice(prefix.length);
-        const extname = file.split('.').at(-1);
-        if (extname === undefined || extname.length === 0) {
-            continue;
+    const _ = await vscode.window.withProgress({
+        title: t('info.update-i18n.parse-iso.title'),
+        location: vscode.ProgressLocation.Window
+    }, async (progress: vscode.Progress<{ message: string, increment: number }>, token: vscode.CancellationToken) => {
+        for (const file of i18nFiles) {
+            const i18nTextItem = await makeI18nTextItem(file, prefix);
+    
+            if (i18nTextItem) {
+                I18nTextMap.set(i18nTextItem.code, i18nTextItem);
+            }
         }
-
-        validFileString = validFileString.slice(0, - (extname.length + 1));
-        
-        const iso = getISO639Code(validFileString);        
-        if (iso === undefined) {
-            vscode.window.showWarningMessage(t('warning.update-i18n.cannot-find-iso.window') + ' ' + file);
-            continue;
-        }
-        const filePath = path.join(root, file);
-        const res = await parseFileByParseMode(filePath);
-
-        if (res) {
-            I18nTextMap.set(iso.code, {
-                code: iso.code,
-                file: filePath,
-                content: res.content,
-                keyRanges: res.keyRanges
-            });
-        }
-    }
+    });
 }
 
 
@@ -263,6 +355,56 @@ function getFirstOneI18nItem() {
         return item;
     }
     return undefined;
+}
+
+/**
+ * 
+ * @param filename 文件名
+ * @param prefix 公共前缀
+ * @returns 
+ */
+async function makeI18nTextItem(filename: string, prefix: string): Promise<I18nTextItem | undefined> {
+    const { t } = vscode.l10n;
+    let validFileString = filename.slice(prefix.length);
+    const extname = filename.split('.').at(-1);
+    if (extname === undefined || extname.length === 0) {
+        return undefined;
+    }
+    
+    validFileString = validFileString.slice(0, - (extname.length + 1));
+    
+    const iso = getISO639Code(validFileString);        
+    if (iso === undefined) {
+        vscode.window.showWarningMessage(t('warning.update-i18n.cannot-find-iso.window') + ' ' + filename);
+        return undefined;
+    }
+    const filePath = path.join(GlobalConfig.root, filename);
+    const res = await parseFileByParseMode(filePath);
+
+    if (res) {
+        return {
+            code: iso.code,
+            file: filePath,
+            content: res.content,
+            keyRanges: res.keyRanges
+        }
+    }
+    return undefined
+}
+
+function getI18nFilesFromEvent(event: { files: readonly vscode.Uri[] }) {
+    const i18nRootFiles = [];
+    for (const file of event.files) {
+        if (file.fsPath.startsWith(GlobalConfig.root)) {
+            const extname = path.extname(file.fsPath).slice(1).toLowerCase();
+            const parseSuffixs = getParseSuffix();
+            if (parseSuffixs !== undefined && !parseSuffixs.includes(extname)) {
+                continue;
+            }
+            i18nRootFiles.push(file.fsPath);
+        }
+    }
+    return i18nRootFiles;
 }
 
 export function getDefaultI18nItem() {
@@ -320,6 +462,13 @@ export const lspLangSelectors: vscode.DocumentFilter[] = [
     },
     {
         language: 'yaml',
+        scheme: 'file'
+    }
+];
+
+export const i18nFileSelectors: vscode.DocumentFilter[] = [
+    {
+        language: 'json',
         scheme: 'file'
     }
 ];

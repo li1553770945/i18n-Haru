@@ -38,6 +38,14 @@
             {
                 "command": "i18n-haru.add-token",
                 "title": "%i18n-haru.add-token.title%"
+            },
+            {
+                "command": "i18n-haru.delete-token",
+                "title": "%i18n-haru.delete-token.title%",
+                "icon": {
+                    "dark": "icons/dark/i18n-delete.svg",
+                    "light": "icons/light/i18n-delete.svg"
+                }
             }
         ],
         "configuration": {
@@ -64,6 +72,11 @@
                     "type": "number",
                     "default": 10,
                     "description": "%i18n-haru.line-hint-max-length.title%"
+                },
+                "i18n-haru.t-quote": {
+                    "type": "string",
+                    "default": "'",
+                    "description": "%i18n-haru.t-quote.title%"
                 }
             }
         },
@@ -73,7 +86,39 @@
                     "command": "i18n-haru.add-token",
                     "when": "editorHasSelection"
                 }
+            ],
+            "editor/title": [
+                {
+                    "command": "i18n-haru.delete-token",
+                    "when": "editorLangId == json",
+                    "group": "navigation@1"
+                }
             ]
+            
+        },
+        "keybindings": [
+            {
+                "command": "i18n-haru.add-token",
+                "key": "alt+i",
+                "mac": "alt+i",
+                "when": "editorHasSelection"
+            }
+        ],
+        "icons": {
+            "i18n-icon": {
+                "description": "i18n icon",
+                "default": {
+                    "fontPath": "./icons/iconfont.woff2",
+                    "fontCharacter": "\\e639"
+                }
+            },
+            "delete-i18n-icon": {
+                "description": "delete i18n icon",
+                "default": {
+                    "fontPath": "./icons/iconfont.woff2",
+                    "fontCharacter": "\\e63a"
+                }
+            }
         }
     },
     "scripts": {

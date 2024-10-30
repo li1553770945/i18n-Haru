@@ -7,5 +7,7 @@
     "i18n-haru.format.title": "解析的 i18n 文件的类型，可选值：json, yaml",
     "i18n-haru.goto-undefined-key.title": "前往为定义的 i18n 键值",
     "i18n-haru.line-hint-max-length.title": "行内提示最大字符数量，默认为 10",
-    "i18n-haru.add-token.title": "新增 i18n token"
+    "i18n-haru.add-token.title": "新增 i18n token",
+    "i18n-haru.t-quote.title": "t 函数内部的字符串的引号，默认是 '",
+    "i18n-haru.delete-token.title": "删除 i18n token"
 }

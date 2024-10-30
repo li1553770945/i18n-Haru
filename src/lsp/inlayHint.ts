@@ -42,6 +42,13 @@ function findMatchingStrings(lineText: string): MatchResult[] {
 
     while ((match = regex.exec(lineText)) !== null) {
         const matchString = match[0];
+        if (match.index > 0) {
+            const preChar = lineText[match.index - 1];
+            if (preChar !== ' ' && preChar !== '$') {
+                continue;
+            }
+        }
+        
         let lastQIndex = matchString.lastIndexOf('"');
         if (lastQIndex === -1) {
             lastQIndex = matchString.lastIndexOf('\'');
@@ -50,7 +57,6 @@ function findMatchingStrings(lineText: string): MatchResult[] {
         const i18nStringMatch = /t\(["']([^"']*)["']\)/.exec(matchString);
         if (i18nStringMatch && i18nStringMatch[1] !== undefined && lastQIndex !== -1) {
             const column = match.index + lastQIndex + 1;
-            console.log(i18nStringMatch[1]);
             matches.push({ match: i18nStringMatch[1], column });
         }
     }

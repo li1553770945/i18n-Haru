@@ -10,5 +10,13 @@
     "error.lsp.parse.fail-parse-json": "解析 JSON 失败",
     "info.command.add-token.title": "添加 i18n 文案",
     "error.command.add-token.cannot-get-default-i18n-item": "无法获得主语言的 i18n 文案",
-    "error.command.add-token.repeat-i18n-token": "重复的 i18n token"
+    "error.command.add-token.repeat-i18n-token": "重复的 i18n token",
+    "info.update-i18n.make-prefix.title": "i18n: 解析最长前缀",
+    "info.update-i18n.parse-iso.title": "i18n: 解析 i18n 文案中",
+    "info.command.delete-token.title": "删除 i18n 文案",
+    "info.command.delete-token.placeholder": "输入需要删除的文案 token",
+    "info.lsp.linter.redundant-token": "相比于基准语言的文案，这是多余的文案 token",
+    "info.lsp.linter.lacked-token": "相比于基准语言的文案，如下的文案 token 缺失 ",
+    "info.lsp.code-action.use-main-for-current-supply": "使用基准语言的文案来补足本文案缺失的部分，并移除多余 token",
+    "info.lsp.code-action.use-main-for-all-supply": "使用基准语言的文案来补足所有文案缺失的部分，并移除多余 token"
 }
