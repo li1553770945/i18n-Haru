@@ -147,5 +147,18 @@ export function isValidT(range: vscode.Range | undefined, document: vscode.TextD
         return true;
     }
     const prevChar = document.lineAt(start.line).text[start.character - 1];
-    return prevChar === ' ' || prevChar === '$';
+    if (prevChar === ' ' || prevChar === '$') {
+        return true;
+    }
+
+    const prePos = new vscode.Position(start.line, start.character);
+    const preRange = document.getWordRangeAtPosition(prePos, /[a-zA-Z_][a-zA-Z0-9_]*/);
+    
+    if (!preRange) {
+        return false;
+    }
+    const preWord = document.getText(preRange);
+    console.log(preWord);
+    
+    return preWord === 't';
 }
