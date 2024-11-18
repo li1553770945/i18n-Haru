@@ -18,5 +18,10 @@
     "info.lsp.linter.redundant-token": "Ceci est un token de copie redondant par rapport à la copie de la langue de base",
     "info.lsp.linter.lacked-token": "Les tokens de copie suivants sont manquants par rapport à la copie de la langue de base",
     "info.lsp.code-action.use-main-for-current-supply": "Utilisez la copie de la langue de base pour compléter la partie manquante de cette copie et supprimer les tokens redondants",
-    "info.lsp.code-action.use-main-for-all-supply": "Utilisez la copie de la langue de base pour compléter toutes les parties manquantes de la copie et supprimer les tokens redondants"
+    "info.lsp.code-action.use-main-for-all-supply": "Utilisez la copie de la langue de base pour compléter toutes les parties manquantes de la copie et supprimer les tokens redondants",
+    "info.lsp.common.params-contain-info": "含有 {0} 个无名参数和 {1} 个具名参数",
+    "error.command.extract.not-i18n-bundle": "当前文件并未被识别为一个 i18n bundle",
+    "info.command.extract.translate-prompt": "请将下方的 i18n json 的 value 部分翻译成 ISO 编码 为 {0} 的语言",
+    "info.command.extract.get-unfinished-message.title": "正在计算可能尚未翻译完成的 i18n message",
+    "error.command.impl-change.parse-json": "解析 JSON 时遇到错误： {0}"
 }

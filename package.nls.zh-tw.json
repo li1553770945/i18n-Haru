@@ -9,5 +9,8 @@
     "i18n-haru.line-hint-max-length.title": "行內提示最大字符數量，默認為 10",
     "i18n-haru.add-token.title": "新增 i18n token",
     "i18n-haru.t-quote.title": "t 函數內部的字符串的引號，默認是 '",
-    "i18n-haru.delete-token.title": "刪除 i18n token"
+    "i18n-haru.delete-token.title": "刪除 i18n token",
+    "i18n-haru.custom-language-mapping.title": "",
+    "i18n-haru.extract-unfinished-message.title": "",
+    "i18n-haru.impl-change-to-origin.title": ""
 }

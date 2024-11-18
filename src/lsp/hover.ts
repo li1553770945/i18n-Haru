@@ -5,13 +5,13 @@ import { isValidT } from '../util';
 
 class I18nProvider implements vscode.HoverProvider {
     public provideHover(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Hover> {
-        const range = document.getWordRangeAtPosition(position, /t\(["'][^"']*["']\)/);
+        const range = document.getWordRangeAtPosition(position, /t\(["'][^"']*["'].*\)/);
         if (!isValidT(range, document)) {
             return undefined;
         }
 
         const targetExpression = document.getText(range);
-        const match = /t\(["']([^"']*)["']\)/.exec(targetExpression);
+        const match = /t\(["']([^"']*)["'].*\)/.exec(targetExpression);
 
         if (match && match[1] !== undefined) {
             const targetI18nKey = match[1];
@@ -22,7 +22,8 @@ class I18nProvider implements vscode.HoverProvider {
             }
             const originSelectionRange = document.getWordRangeAtPosition(position, /["'][^"']*["']/);
 
-            const profile = makeI18nKeyProfile(targetI18nKey);
+            const targetContent = i18nItem.content[targetI18nKey];
+            const profile = makeI18nKeyProfile(targetI18nKey, targetContent);
             const markdown = new vscode.MarkdownString(profile, true);
             const hover = new vscode.Hover(markdown, originSelectionRange);
             return hover;

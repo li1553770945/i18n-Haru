@@ -60,13 +60,13 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
         const currentKeys = new Set(Object.keys(targetI18n.content));
         const correctJson: Record<string, string> = {};
 
-        for (const i18nToken of Object.keys(i18nItem.content)) {
-            if (currentKeys.has(i18nToken)) {
-                const text = targetI18n.content[i18nToken];
-                correctJson[i18nToken] = text;
+        for (const message of Object.keys(i18nItem.content)) {
+            if (currentKeys.has(message)) {
+                const text = targetI18n.content[message];
+                correctJson[message] = text;
             } else {
-                const text = i18nItem.content[i18nToken];
-                correctJson[i18nToken] = text;
+                const text = i18nItem.content[message];
+                correctJson[message] = text;
             }
         }
 
@@ -98,13 +98,13 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
                 // 计算当前的 correctJson
                 const correctJson: Record<string, string> = {};
                 const currentKeys = new Set(Object.keys(item.content));
-                for (const i18nToken of Object.keys(i18nItem.content)) {
-                    if (currentKeys.has(i18nToken)) {
-                        const text = targetI18n.content[i18nToken];
-                        correctJson[i18nToken] = text;
+                for (const message of Object.keys(i18nItem.content)) {
+                    if (currentKeys.has(message)) {
+                        const text = targetI18n.content[message];
+                        correctJson[message] = text;
                     } else {
-                        const text = i18nItem.content[i18nToken];
-                        correctJson[i18nToken] = text;
+                        const text = i18nItem.content[message];
+                        correctJson[message] = text;
                     }
                 }
                 allEdit.replace(uri, new vscode.Range(0, 0, doc.lineCount, 0), JSON.stringify(correctJson, null, '    '));
@@ -152,13 +152,13 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
         const currentKeys = new Set(Object.keys(targetI18n.content));
         const correctJson: Record<string, string> = {};
 
-        for (const i18nToken of Object.keys(i18nItem.content)) {
-            if (currentKeys.has(i18nToken)) {
-                const text = targetI18n.content[i18nToken];
-                correctJson[i18nToken] = text;
+        for (const message of Object.keys(i18nItem.content)) {
+            if (currentKeys.has(message)) {
+                const text = targetI18n.content[message];
+                correctJson[message] = text;
             } else {
-                const text = i18nItem.content[i18nToken];
-                correctJson[i18nToken] = text;
+                const text = i18nItem.content[message];
+                correctJson[message] = text;
             }
         }
 
@@ -190,13 +190,13 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
                 // 计算当前的 correctJson
                 const correctJson: Record<string, string> = {};
                 const currentKeys = new Set(Object.keys(item.content));
-                for (const i18nToken of Object.keys(i18nItem.content)) {
-                    if (currentKeys.has(i18nToken)) {
-                        const text = targetI18n.content[i18nToken];
-                        correctJson[i18nToken] = text;
+                for (const message of Object.keys(i18nItem.content)) {
+                    if (currentKeys.has(message)) {
+                        const text = targetI18n.content[message];
+                        correctJson[message] = text;
                     } else {
-                        const text = i18nItem.content[i18nToken];
-                        correctJson[i18nToken] = text;
+                        const text = i18nItem.content[message];
+                        correctJson[message] = text;
                     }
                 }
                 allEdit.replace(uri, new vscode.Range(0, 0, doc.lineCount, 0), JSON.stringify(correctJson, null, '    '));

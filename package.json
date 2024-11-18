@@ -64,6 +64,22 @@
                     "dark": "icons/dark/i18n-delete.svg",
                     "light": "icons/light/i18n-delete.svg"
                 }
+            },
+            {
+                "command": "i18n-haru.extract-unfinished-message",
+                "title": "%i18n-haru.extract-unfinished-message.title%",
+                "icon": {
+                    "dark": "icons/dark/i18n-transform.svg",
+                    "light": "icons/light/i18n-transform.svg"
+                }
+            },
+            {
+                "command": "i18n-haru.impl-change-to-origin",
+                "icon": {
+                    "dark": "icons/dark/i18n-impl-change.svg",
+                    "light": "icons/light/i18n-impl-change.svg"
+                },
+                "title": "%i18n-haru.impl-change-to-origin.title%"
             }
         ],
         "configuration": {
@@ -95,6 +111,10 @@
                     "type": "string",
                     "default": "'",
                     "description": "%i18n-haru.t-quote.title%"
+                },
+                "i18n-haru.custom-language-mapping": {
+                    "type": "object",
+                    "description": "%i18n-haru.custom-language-mapping.title%"
                 }
             }
         },
@@ -108,11 +128,20 @@
             "editor/title": [
                 {
                     "command": "i18n-haru.delete-token",
-                    "when": "editorLangId == json",
+                    "when": "editorLangId == json && resourceFilename != 'i18n-Haru.json'",
                     "group": "navigation@1"
+                },
+                {
+                    "command": "i18n-haru.extract-unfinished-message",
+                    "when": "editorLangId == json && resourceFilename != 'i18n-Haru.json'",
+                    "group": "navigation@2"
+                },
+                {
+                    "command": "i18n-haru.impl-change-to-origin",
+                    "when": "resourceFilename == 'i18n-Haru.json'",
+                    "group": "navigation@3"
                 }
             ]
-            
         },
         "keybindings": [
             {
@@ -120,6 +149,22 @@
                 "key": "alt+i",
                 "mac": "alt+i",
                 "when": "editorHasSelection"
+            }
+        ],
+        "languages": [
+            {
+                "id": "i18n-prompt",
+                "extensions": [
+                    ".i18n-prompt"
+                ],
+                "configuration": "./syntaxes/i18n-prompt.configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "i18n-prompt",
+                "scopeName": "source.i18n-prompt",
+                "path": "./syntaxes/i18n-prompt.tmLanguage.json"
             }
         ],
         "icons": {
@@ -151,8 +196,10 @@
         "test": "node ./out/test/runTest.js"
     },
     "devDependencies": {
+        "@types/franc": "^5.0.3",
         "@types/glob": "^8.1.0",
         "@types/js-yaml": "^4.0.9",
+        "@types/langs": "^2.0.5",
         "@types/mocha": "^10.0.1",
         "@types/node": "20.2.5",
         "@types/vscode": "^1.94.0",
@@ -169,7 +216,9 @@
     },
     "dependencies": {
         "chokidar": "^4.0.1",
+        "franc": "^6.2.0",
         "js-yaml": "^4.1.0",
-        "jsonc-parser": "^3.3.1"
+        "jsonc-parser": "^3.3.1",
+        "langs": "^2.0.0"
     }
 }

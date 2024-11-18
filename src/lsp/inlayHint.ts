@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { getDefaultI18nItem, I18nTextItem, lspLangSelectors } from '../global';
+import { getDefaultI18nItem, getDisplayI18nItem, I18nTextItem, lspLangSelectors } from '../global';
 import { makeI18nKeyProfile } from './completion';
 import { isValidT } from '../util';
 
@@ -13,7 +13,7 @@ class I18nProvider implements vscode.InlayHintsProvider {
         
         const visibleRange = activeEditor.visibleRanges[0];
         const inlayHints: vscode.InlayHint[] = [];
-        const i18nItem = getDefaultI18nItem();
+        const i18nItem = getDisplayI18nItem();
         if (!i18nItem) {
             return undefined;
         }
@@ -42,14 +42,14 @@ function findMatchingStrings(
     lineText: string
 ): MatchResult[] {
 
-    const regex = /t\(["']([^"']*)["']\)/g;
+    const regex = /t\(([^)].*)\)/g;
     const matches: MatchResult[] = [];
     let match;
     
-    while ((match = regex.exec(lineText)) !== null) {        
+    while ((match = regex.exec(lineText)) !== null) {
         const matchString = match[0];
         const start = new vscode.Position(line, match.index);
-        const range = new vscode.Range(start, start);
+        const range = new vscode.Range(start, start);        
         if (!isValidT(range, document)) {
             continue;
         }
@@ -59,7 +59,7 @@ function findMatchingStrings(
             lastQIndex = matchString.lastIndexOf('\'');
         }
 
-        const i18nStringMatch = /t\(["']([^"']*)["']\)/.exec(matchString);
+        const i18nStringMatch = /t\(["']([^"']*)["'].*\)/.exec(matchString);
         if (i18nStringMatch && i18nStringMatch[1] !== undefined && lastQIndex !== -1) {
             const column = match.index + lastQIndex + 1;            
             matches.push({ match: i18nStringMatch[1], column });
@@ -99,7 +99,9 @@ function makeLineTextHint(
 
         const pos = new vscode.Position(line, match.column);
         const hint = new vscode.InlayHint(pos, content, vscode.InlayHintKind.Type);
-        const profile = makeI18nKeyProfile(targetI18nKey);
+
+        const targetContent = i18nItem.content[targetI18nKey];
+        const profile = makeI18nKeyProfile(targetI18nKey, targetContent);
         const markdown = new vscode.MarkdownString(profile, true);
         hint.tooltip = markdown;
         hint.paddingLeft = true;

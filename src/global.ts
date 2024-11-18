@@ -37,6 +37,9 @@ export interface I18nTextItem {
     keyRanges: Map<string, vscode.Range>
 }
 
+/**
+ * @description 用于管理全局 i18n message 的数据结构，key 为 ISO code
+ */
 export const I18nTextMap: Map<string, I18nTextItem> = new Map();
 
 export async function updateAll() {
@@ -440,6 +443,34 @@ export function getDefaultI18nItem() {
     }
 }
 
+export function getDisplayI18nItem() {
+    // 调用这个函数的时候，比如 inlay hints，初始化还未完成，所以需要额外手动赋值一次 main
+    const i18nSetting = vscode.workspace.getConfiguration('i18n-haru');
+    let display = i18nSetting.get<string>('display') || 'zh-cn';
+    
+    if (display.toLowerCase() === 'zh') {
+        display = 'zh-cn';
+    }
+    GlobalConfig.display = display.toLowerCase();
+
+    const item = I18nTextMap.get(display);
+    
+    if (item === undefined) {
+        const { t } = vscode.l10n;
+        const firstOne = getFirstOneI18nItem();
+        if (firstOne === undefined) {
+            return undefined;
+        }
+        if (remindUserErrorMain === false) {
+            vscode.window.showWarningMessage(t('warning.lsp.get-main.cannot-find-main-use-replacer-instead') + ' ' + firstOne.code);
+            remindUserErrorMain = true;
+        }
+        return firstOne;
+    } else {
+        return item;
+    }
+}
+
 export const lspLangSelectors: vscode.DocumentFilter[] = [
     {
         language: 'typescript',
@@ -477,3 +508,15 @@ export const i18nFileSelectors: vscode.DocumentFilter[] = [
         scheme: 'file'
     }
 ];
+
+interface ICurrentTranslation {
+    promptDocument?: vscode.TextDocument,
+    implChangeDocument?: vscode.TextDocument,
+    code: string
+}
+
+export const currentTranslation: ICurrentTranslation = {
+    promptDocument: undefined,
+    implChangeDocument: undefined,
+    code: ''
+};

@@ -9,5 +9,8 @@
     "i18n-haru.line-hint-max-length.title": "行内提示最大字符数量，默认为 10",
     "i18n-haru.add-token.title": "新增 i18n token",
     "i18n-haru.t-quote.title": "t 函数内部的字符串的引号，默认是 '",
-    "i18n-haru.delete-token.title": "删除 i18n token"
+    "i18n-haru.delete-token.title": "删除 i18n token",
+    "i18n-haru.custom-language-mapping.title": "自定义 ISO语言的 i18n 文件路径，详情请见",
+    "i18n-haru.extract-unfinished-message.title": "从当前文件提取尚未完成翻译的部分，生成翻译 prompt",
+    "i18n-haru.impl-change-to-origin.title": "将当前编辑器内的 i18n message 覆盖写入左侧的源文件"
 }

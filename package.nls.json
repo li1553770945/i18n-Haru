@@ -9,5 +9,8 @@
     "i18n-haru.line-hint-max-length.title": "Maximum Number of Characters for Inline Hint, default is 10",
     "i18n-haru.add-token.title": "Add i18n Token",
     "i18n-haru.t-quote.title": "Quotes for Strings Inside t Function, default is '",
-    "i18n-haru.delete-token.title": "Delete i18n Token"
+    "i18n-haru.delete-token.title": "Delete i18n Token",
+    "i18n-haru.custom-language-mapping.title": "",
+    "i18n-haru.extract-unfinished-message.title": "",
+    "i18n-haru.impl-change-to-origin.title": ""
 }

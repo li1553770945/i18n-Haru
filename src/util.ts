@@ -1,7 +1,100 @@
 import * as vscode from 'vscode';
-import { getDefaultI18nItem, I18nTextMap, updateAll } from './global';
+import { currentTranslation, getDefaultI18nItem, I18nTextMap, updateAll } from './global';
 import * as fs from 'fs';
-import path = require('path');
+import * as path from 'path';
+
+import { franc } from 'franc';
+import * as langs from 'langs';
+
+const { t } = vscode.l10n;
+
+export function detectLanguageISO(text: string): string {
+    // 使用 franc 检测语言
+    const languageCode = franc(text);
+
+    // 如果检测到的语言代码为 'und'，表示无法确定语言
+    if (languageCode === 'und') {
+        return 'unknown';
+    }
+
+    // 使用 langs 获取 ISO 639-3 编码
+    const language = langs.where('2', languageCode);
+
+    if (language === undefined) {
+        return 'unknown';
+    }
+
+    // 返回 ISO 639-3 编码
+    return language[1] || 'unknown';
+}
+
+
+export async function extractUnfinishedItems(context: vscode.ExtensionContext, uri: vscode.Uri) {
+    const i18nItem = findI18nItemByUri(uri);
+    if (i18nItem) {
+        // const unfinished = await vscode.window.withProgress({
+        //     location: vscode.ProgressLocation.Notification,
+        //     title: t('info.command.extract.get-unfinished-message.title')
+        // }, async () => {
+        //     const unfinished: Record<string, string> = {};
+        //     for (const message of Object.keys(i18nItem.content)) {
+        //         const messageContent = i18nItem.content[message] as string;
+
+        //         // 当前的句子是否和当前的文件的 code 代表同一个语言
+        //         let charWiseSame = false;
+        //         for (const char of messageContent) {
+        //             const code = detectLanguageISO(char);
+        //             if (code === i18nItem.code) {
+        //                 charWiseSame = true;
+        //                 break;
+        //             }
+        //         }
+        //         if (!charWiseSame) {
+        //             charWiseSame = detectLanguageISO(messageContent) === i18nItem.code;
+        //         }
+
+        //         // 如果不是同一个语言，则需要翻译
+        //         if (!charWiseSame) {
+        //             console.log(message, messageContent, detectLanguageISO(messageContent));
+        //             unfinished[message] = messageContent;
+        //         }
+        //     }
+        //     return unfinished;
+        // });
+
+
+        // 创建一个临时的编辑器用于生成
+        const tmpChangePath = path.join(context.extensionPath, 'i18n-Haru.json');
+        fs.writeFileSync(tmpChangePath, '');
+        const implChangeDocument = await vscode.workspace.openTextDocument(vscode.Uri.file(tmpChangePath));
+        await vscode.window.showTextDocument(implChangeDocument, {
+            preview: false,
+            viewColumn: vscode.ViewColumn.Beside
+        });
+        currentTranslation.implChangeDocument = implChangeDocument;
+        currentTranslation.code = i18nItem.code;
+
+    } else {
+        vscode.window.showErrorMessage(t('error.command.extract.not-i18n-bundle'));
+    }
+}
+
+function makeTranslationPrompt(code: string, unfinished: Record<string, string>) {
+    const prompt = t('info.command.extract.translate-prompt', code) + '\n\n' + JSON.stringify(unfinished, null, '  ');
+    return prompt;
+}
+
+
+function findI18nItemByUri(uri: vscode.Uri) {
+    // 先找到 uri 对应的 i18n item
+    for (const item of I18nTextMap.values()) {
+        if (item.file === uri.fsPath) {
+            return item;
+        }
+    }
+    return undefined;
+}
+
 
 export async function addI18nToken(context: vscode.ExtensionContext) {
     const { t } = vscode.l10n;
@@ -29,9 +122,6 @@ export async function addI18nToken(context: vscode.ExtensionContext) {
 
     const startQuote = findQuote(startLine, startPosition.character - 1, -1);
     const endQuote = findQuote(endLine, endPosition.character, 1);
-
-    console.log(startQuote);
-    console.log(endQuote);    
 
     if (startQuote && endQuote) {
         // 扩展选区到引号的区域
@@ -157,8 +247,38 @@ export function isValidT(range: vscode.Range | undefined, document: vscode.TextD
     if (!preRange) {
         return false;
     }
-    const preWord = document.getText(preRange);
-    console.log(preWord);
-    
+    const preWord = document.getText(preRange);    
     return preWord === 't';
+}
+
+
+export async function implChange(uri: vscode.Uri) {
+    if (currentTranslation.code === '') {
+        return;
+    }
+    // 将当前临时文件内的玩意儿覆盖进 i18n 文件
+    const i18nItem = I18nTextMap.get(currentTranslation.code);
+    if (!i18nItem) {
+        return;
+    }
+    
+    if (currentTranslation.implChangeDocument) {
+        const text = currentTranslation.implChangeDocument.getText();
+        try {
+            const json = JSON.parse(text) as Record<string, string>;
+            for (const message of Object.keys(json)) {
+                const translation = json[message] as string;
+                i18nItem.content[message] = translation;
+            }
+            fs.writeFileSync(i18nItem.file, JSON.stringify(i18nItem.content, null, '  '));
+        } catch (error) {
+            vscode.window.showErrorMessage(t('error.command.impl-change.parse-json', `${error}`));
+        }
+
+
+        await vscode.window.showTextDocument(currentTranslation.implChangeDocument);
+        await vscode.commands.executeCommand('workbench.action.closeActiveEditor');
+    }
+
+    currentTranslation.code = '';
 }

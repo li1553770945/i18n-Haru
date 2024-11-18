@@ -18,5 +18,10 @@
     "info.lsp.linter.redundant-token": "هذا رمز نص زائد مقارنة بنص اللغة الأساسية",
     "info.lsp.linter.lacked-token": "الرموز التالية مفقودة مقارنة بنص اللغة الأساسية",
     "info.lsp.code-action.use-main-for-current-supply": "استخدم نص اللغة الأساسية لتعويض الجزء المفقود من هذا النص وإزالة الرموز الزائدة",
-    "info.lsp.code-action.use-main-for-all-supply": "استخدم نص اللغة الأساسية لتعويض جميع الأجزاء المفقودة من النص وإزالة الرموز الزائدة"
+    "info.lsp.code-action.use-main-for-all-supply": "استخدم نص اللغة الأساسية لتعويض جميع الأجزاء المفقودة من النص وإزالة الرموز الزائدة",
+    "info.lsp.common.params-contain-info": "含有 {0} 个无名参数和 {1} 个具名参数",
+    "error.command.extract.not-i18n-bundle": "当前文件并未被识别为一个 i18n bundle",
+    "info.command.extract.translate-prompt": "请将下方的 i18n json 的 value 部分翻译成 ISO 编码 为 {0} 的语言",
+    "info.command.extract.get-unfinished-message.title": "正在计算可能尚未翻译完成的 i18n message",
+    "error.command.impl-change.parse-json": "解析 JSON 时遇到错误： {0}"
 }
