@@ -15,16 +15,18 @@ class I18nProvider implements vscode.InlayHintsProvider {
         const visibleRange = activeEditor.visibleRanges[0];
         const inlayHints: vscode.InlayHint[] = [];
         const i18nItem = getDisplayI18nItem();
+        
         if (!i18nItem) {
             return undefined;
         }
+        
         // -+ 3 稍微优化一下加载
-        const visibleMargin = 3;
+        const visibleMargin = 0;
         for (let line = Math.max(visibleRange.start.line - visibleMargin, 0); line <= visibleRange.end.line + visibleMargin; ++ line) {
             const lineText = document.lineAt(line).text;
             const maxHintLength = vscode.workspace.getConfiguration('i18n-haru').get<number>('line-hint-max-length') || 10;
             if (lineText.length > 0) {
-                const hint = makeLineTextHint(document, line, lineText, i18nItem, maxHintLength);
+                const hint = makeLineTextHint(document, line, lineText, i18nItem, maxHintLength);                
                 inlayHints.push(...hint);
             }
         }
@@ -106,7 +108,7 @@ function makeLineTextHint(
         const markdown = new vscode.MarkdownString(profile, true);
         hint.tooltip = markdown;
         hint.paddingLeft = true;
-        hint.paddingRight = true;
+        hint.paddingRight = true;        
         hints.push(hint);
     }
 

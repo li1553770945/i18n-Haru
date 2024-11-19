@@ -108,10 +108,10 @@ export function makeI18nKeyProfile(i18nKey: string, targetContent: string): stri
     /// 支持含参数的 i18n 提醒
     /// 无名参数 i18n
     /// "nice-dinner": "今天我们去了 {0} 吃了 {1} 这道菜，味道好极了"
-    /// 调用方式： t("nice-dinner", name, meanlName);
+    /// 调用方式： t("nice-dinner", name, mealName);
     /// 具名参数 i18n
-    /// "nice-dinner": "今天我们去了 {name} 吃了 {meanlName} 这道菜，味道好极了"
-    /// 调用方式： t("nice-dinner", { name, meanlName });
+    /// "nice-dinner": "今天我们去了 {name} 吃了 {mealName} 这道菜，味道好极了"
+    /// 调用方式： t("nice-dinner", { name, mealName });
     /// 混合使用也是可以的：具体要看 i18n 框架是如何支持的
     let profile = '### I18n Key\n';
     const regex = /\{(.*?)\}/g;

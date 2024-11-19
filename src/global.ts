@@ -77,6 +77,10 @@ export async function initialise(context: vscode.ExtensionContext) {
     if (workspaceFolders) {
         const workspaceFolder = workspaceFolders[0];
         GlobalConfig.workspacePath = workspaceFolder.uri.fsPath;
+        const dotVscode = path.join(workspaceFolder.uri.fsPath, '.vscode');
+        if (!fs.existsSync(dotVscode)) {
+            fs.mkdirSync(dotVscode, { recursive: true });
+        }
         const settingPath = path.join(workspaceFolder.uri.fsPath, '.vscode', 'settings.json');
         if (!fs.existsSync(settingPath)) {
             fs.writeFileSync(settingPath, JSON.stringify({}, null, '    '));
@@ -248,6 +252,15 @@ export async function configureI18nFolder(context: vscode.ExtensionContext) {
     if (fs.existsSync(targetFolder)) {
         GlobalConfig.root = targetFolder;
         updateI18nFromRoot();
+
+        const settingPath = path.join(GlobalConfig.workspacePath, '.vscode', 'settings.json');
+        const originSetting = JSON.parse(fs.readFileSync(settingPath, { encoding: 'utf-8' }));
+        let root = targetFolder.replace(GlobalConfig.workspacePath, '');
+        if (root.startsWith('/') || root.startsWith('\\')) {
+            root = root.slice(1);
+        }
+        originSetting["i18n-haru.root"] = root;
+        fs.writeFileSync(settingPath, JSON.stringify(originSetting, null, '  '));
     }
 }
 
@@ -459,7 +472,7 @@ async function makeI18nTextItem(filename: string, prefix: string, customMapping:
                 { title: t('info.lookup-document'), value: true }
             );
             if (res?.value) {
-                vscode.env.openExternal(vscode.Uri.parse('https://document.kirigaya.cn/docs/i18n-haru/1.html'));
+                vscode.env.openExternal(vscode.Uri.parse('https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系'));
             }
         }
         return undefined;

@@ -267,7 +267,7 @@ export async function implChange(uri: vscode.Uri) {
                 const translation = json[message] as string;
                 i18nItem.content[message] = translation;
             }
-            await updateAll();
+            fs.writeFileSync(i18nItem.file, JSON.stringify(i18nItem.content, null, '  '));
         } catch (error) {
             vscode.window.showErrorMessage(t('error.command.impl-change.parse-json', `${error}`));
         }
