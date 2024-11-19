@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { defaultRange, getDefaultI18nItem, I18nTextMap, lspLangSelectors } from '../global';
 import { isValidT } from '../util';
+import { t } from '../i18n';
 
 class I18nProvider implements vscode.CompletionItemProvider {
     public provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext): vscode.ProviderResult<vscode.CompletionItem[] | vscode.CompletionList<vscode.CompletionItem>> {
@@ -19,8 +20,7 @@ class I18nProvider implements vscode.CompletionItemProvider {
             if (!i18nItem) {
                 return items;
             }
-            
-            const { t } = vscode.l10n;
+                        
             const insertRange = new vscode.Range(
                 new vscode.Position(range.start.line, range.start.character + 3),
                 new vscode.Position(range.end.line, range.end.character - 2 - match[2].length)
@@ -66,7 +66,6 @@ class I18nAllProvider implements vscode.CompletionItemProvider {
             return items;
         }
         
-        const { t } = vscode.l10n;
         for (const i18nKey of Object.keys(i18nItem.content)) {
             if (!i18nKey.startsWith(targetI18nKey)) {
                 continue;
@@ -88,7 +87,6 @@ class I18nAllProvider implements vscode.CompletionItemProvider {
 }
 
 export function makeI18nKeyProfile(i18nKey: string, targetContent: string): string {
-    const { t } = vscode.l10n;
     let profileContent = '';
 
     for (const [langCode, item] of I18nTextMap.entries()) {
@@ -135,7 +133,7 @@ export function makeI18nKeyProfile(i18nKey: string, targetContent: string): stri
     }
 
     if (unnamedParams.length === 0 && namedParams.length === 0) {
-        profile += '```js\nt("' + i18nKey + '")\n```\n---\n';
+        profile += '```js\nt("' + i18nKey + '")\n```\n\n---\n\n';
     } else {
         const tList: string[] = ['"' + i18nKey + '"'];
         unnamedParams.forEach(param => tList.push('arg' + param.id));
@@ -144,7 +142,7 @@ export function makeI18nKeyProfile(i18nKey: string, targetContent: string): stri
             tList.push(nameParamString);
         }
         profile += '```js\nt(' + tList.join(', ') + ')\n```\n';
-        profile += t('info.lsp.common.params-contain-info', unnamedParams.length, namedParams.length) + '\n\n---\n';
+        profile += t('info.lsp.common.params-contain-info', unnamedParams.length.toString(), namedParams.length.toString()) + '\n\n---\n\n';
     }
 
     return profile + profileContent;

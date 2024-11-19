@@ -23,5 +23,10 @@
     "error.command.extract.not-i18n-bundle": "当前文件并未被识别为一个 i18n bundle",
     "info.command.extract.translate-prompt": "请将下方的 i18n json 的 value 部分翻译成 ISO 编码 为 {0} 的语言",
     "info.command.extract.get-unfinished-message.title": "正在计算可能尚未翻译完成的 i18n message",
-    "error.command.impl-change.parse-json": "解析 JSON 时遇到错误： {0}"
+    "error.command.impl-change.parse-json": "解析 JSON 时遇到错误： {0}",
+    "warn.not-valid-iso639-code": "{0} 不是一个有效的 ISO-639 语言代码，所有的合法代码：{1}",
+    "error.parse-custom-mapping.parse-error": "解析自定义 i18n 配置文件错误，错误原因: ",
+    "info.config.custom-language-mapping": "如果你希望自定义 i18n 配置文件和 ISO 639 的对应关系，请考虑配置 i18n-haru.custom-language-mapping，详细请参考： https://document.kirigaya.cn/docs/i18n-haru/1.html",
+    "info.lookup-document": "查看参考文档",
+    "warn.update-i18n.iso-639-not-found": "无法找到 {0} 的所匹配的 ISO 639 语言代码，故无法载入 i18n Haru 中。"
 }

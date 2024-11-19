@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { getDefaultI18nItem, getDisplayI18nItem, I18nTextItem, lspLangSelectors } from '../global';
 import { makeI18nKeyProfile } from './completion';
 import { isValidT } from '../util';
+import { t } from '../i18n';
 
 class I18nProvider implements vscode.InlayHintsProvider {
     public provideInlayHints(document: vscode.TextDocument, range: vscode.Range, token: vscode.CancellationToken): vscode.ProviderResult<vscode.InlayHint[]> {
@@ -17,7 +18,9 @@ class I18nProvider implements vscode.InlayHintsProvider {
         if (!i18nItem) {
             return undefined;
         }
-        for (let line = visibleRange.start.line; line <= visibleRange.end.line; ++ line) {
+        // -+ 3 稍微优化一下加载
+        const visibleMargin = 3;
+        for (let line = Math.max(visibleRange.start.line - visibleMargin, 0); line <= visibleRange.end.line + visibleMargin; ++ line) {
             const lineText = document.lineAt(line).text;
             const maxHintLength = vscode.workspace.getConfiguration('i18n-haru').get<number>('line-hint-max-length') || 10;
             if (lineText.length > 0) {
@@ -76,8 +79,6 @@ function makeLineTextHint(
     i18nItem: I18nTextItem,
     maxHintLength: number
 ): vscode.InlayHint[] {
-    const { t } = vscode.l10n;
-
     const hints: vscode.InlayHint[] = [];
     const matches = findMatchingStrings(document, line, lineText);
     

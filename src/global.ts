@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as YAML from 'js-yaml';
-import { ISOCodeArray } from './i18n';
+import { ISOCodeArray, t, ValidISOCode } from './i18n';
 import { parseJson, ParseResult, parseYaml } from './parse';
 import { OutgoingMessage } from 'http';
 import { jsonSuggestor } from './lsp/diagnostics';
@@ -18,13 +18,15 @@ interface IGlobalConfig {
     main: string,
     display: string,
     parseMode: IParseMode
+    workspacePath: string
 }
 
 export const GlobalConfig: IGlobalConfig = {
     root: 'i18n',
     main: 'zh-cn',
     display: '',
-    parseMode: 'json'
+    parseMode: 'json',
+    workspacePath: ''
 };
 
 // 这里没有设计为 Map 是为了 JSON 的序列化和反序列化更加方便
@@ -72,10 +74,9 @@ export async function updateAll() {
 
 export async function initialise(context: vscode.ExtensionContext) {
     const workspaceFolders = vscode.workspace.workspaceFolders;
-    const { t } = vscode.l10n;
-
     if (workspaceFolders) {
         const workspaceFolder = workspaceFolders[0];
+        GlobalConfig.workspacePath = workspaceFolder.uri.fsPath;
         const settingPath = path.join(workspaceFolder.uri.fsPath, '.vscode', 'settings.json');
         if (!fs.existsSync(settingPath)) {
             fs.writeFileSync(settingPath, JSON.stringify({}, null, '    '));
@@ -125,6 +126,10 @@ export async function initialise(context: vscode.ExtensionContext) {
                 i18nFiles.push(file);
             }
 
+            // 从计算得到的映射中读取 i18n 配置并载入全局变量
+            const i18nSetting = vscode.workspace.getConfiguration('i18n-haru');
+            const customMapping: Record<string, string> = clearCustomMapping(i18nSetting.get('custom-language-mapping'));
+
             // 去除公共前缀和后缀
             const prefix = await vscode.window.withProgress({
                 title: t('info.update-i18n.make-prefix.title'),
@@ -133,9 +138,10 @@ export async function initialise(context: vscode.ExtensionContext) {
                 return longestCommonPrefix(i18nFiles);
             });
 
+
             for (const file of i18nRootFiles) {
                 const filename = path.basename(file);
-                const i18nTextItem = await makeI18nTextItem(filename, prefix);
+                const i18nTextItem = await makeI18nTextItem(filename, prefix, customMapping);
                 if (i18nTextItem) {
                     I18nTextMap.set(i18nTextItem.code, i18nTextItem);
                 }
@@ -226,7 +232,6 @@ export async function initialise(context: vscode.ExtensionContext) {
 }
 
 export async function configureI18nFolder(context: vscode.ExtensionContext) {
-    const { t } = vscode.l10n;
     const res = await vscode.window.showOpenDialog({
         title: t('info.configure-i18n-folder.configure.title'),
         openLabel: t('info.configure-i18n-folder.configure.button'),
@@ -313,13 +318,14 @@ function longestCommonPrefix(strs: string[]): string {
 }
 
 async function updateI18nFromRoot() {
-    const { t } = vscode.l10n;
     const root = GlobalConfig.root;
     if (!fs.existsSync(root)) {
         return;
     }
 
     const parseSuffixs = getParseSuffix();
+
+    // 得到所有的 i18n 配置文件，必须是 i18n-haru.lang 中设置的后缀，默认为 json
     const i18nFiles: string[] = [];
     for (const file of fs.readdirSync(root)) {
         let extname = file.split('.').at(-1);
@@ -340,18 +346,75 @@ async function updateI18nFromRoot() {
         return longestCommonPrefix(i18nFiles);
     });
 
+    // 从计算得到的映射中读取 i18n 配置并载入全局变量
+    const i18nSetting = vscode.workspace.getConfiguration('i18n-haru');
+    const customMapping: Record<string, string> = clearCustomMapping(i18nSetting.get('custom-language-mapping'));
+
     const _ = await vscode.window.withProgress({
         title: t('info.update-i18n.parse-iso.title'),
         location: vscode.ProgressLocation.Window
     }, async (progress: vscode.Progress<{ message: string, increment: number }>, token: vscode.CancellationToken) => {
         for (const file of i18nFiles) {
-            const i18nTextItem = await makeI18nTextItem(file, prefix);
-    
-            if (i18nTextItem) {
+            const i18nTextItem = await makeI18nTextItem(file, prefix, customMapping);
+            if (i18nTextItem && i18nTextItem.code.length > 0) {
                 I18nTextMap.set(i18nTextItem.code, i18nTextItem);
             }
         }
+
+        // 如果用户设置了 i18n-haru.custom-language-mapping，使用设置的映射去尝试覆盖
+        for (const code of Object.keys(customMapping)) {
+            try {
+                const customPath = customMapping[code];
+                const realCode = code === 'zh' ? 'zh-cn' : code;
+                const res = await parseFileByParseMode(customPath);
+                if (res) {
+                    I18nTextMap.set(realCode, {
+                        code: realCode,
+                        file: customPath,
+                        content: res.content,
+                        keyRanges: res.keyRanges
+                    });
+                } else {
+                    throw Error("parseFileByParseMode 解析错误");
+                }
+            } catch (error) {
+                const errorMessage = t('error.parse-custom-mapping.parse-error') + error;
+                vscode.window.showErrorMessage(errorMessage);
+            }
+        }
     });
+}
+
+/**
+ * @description 检查自定义映射的类型并且将所有的非绝对路径转换为绝对路径
+ * @param customMapping 
+ * @returns 
+ */
+function clearCustomMapping(customMapping?: Record<string, any>): Record<string, string> {
+    if (typeof customMapping !== 'object') {
+        return {};
+    }
+    const mapping: Record<string, string> = {};
+    for (const code of Object.keys(customMapping)) {
+        const configPath = customMapping[code];
+        if (typeof code !== 'string' || typeof configPath !== 'string') {
+            return {};
+        }
+        if (!ValidISOCode.has(code) && code !== 'zh') {
+            const allcodes = new Array(ValidISOCode);
+            vscode.window.showWarningMessage(t('warn.not-valid-iso639-code', code, allcodes.join(',')));
+            continue;
+        }
+        if (!path.isAbsolute(configPath)) {
+            // 根据当前的项目根目录为路径进行拼凑
+            const absPath = path.resolve(GlobalConfig.workspacePath, configPath);          
+            mapping[code] = absPath;
+        } else {
+            mapping[code] = configPath;
+        }
+    }
+
+    return mapping;
 }
 
 
@@ -371,9 +434,10 @@ function getFirstOneI18nItem() {
  * @param prefix 公共前缀
  * @returns 
  */
-async function makeI18nTextItem(filename: string, prefix: string): Promise<I18nTextItem | undefined> {
-    const { t } = vscode.l10n;
+async function makeI18nTextItem(filename: string, prefix: string, customMapping: Record<string, string>): Promise<I18nTextItem | undefined> {
     let validFileString = filename.slice(prefix.length);
+    const filePath = path.join(GlobalConfig.root, filename);
+
     const extname = filename.split('.').at(-1);
     if (extname === undefined || extname.length === 0) {
         return undefined;
@@ -381,12 +445,25 @@ async function makeI18nTextItem(filename: string, prefix: string): Promise<I18nT
     
     validFileString = validFileString.slice(0, - (extname.length + 1));
     
-    const iso = getISO639Code(validFileString);        
+    const iso = getISO639Code(validFileString);
     if (iso === undefined) {
-        vscode.window.showWarningMessage(t('warning.update-i18n.cannot-find-iso.window') + ' ' + filename);
+        // 查看当前文件是否在自定义映射中
+        const inPath = Object.values(customMapping).filter(customPath => customPath === filePath);
+        console.log(customMapping);
+        console.log([filePath]);
+        
+        if (inPath.length === 0) {
+            const warningMessage = t('warn.update-i18n.iso-639-not-found', filename);
+            const suggestMessage = t('info.config.custom-language-mapping');
+            const res = await vscode.window.showWarningMessage(warningMessage + ' ' + suggestMessage,
+                { title: t('info.lookup-document'), value: true }
+            );
+            if (res?.value) {
+                vscode.env.openExternal(vscode.Uri.parse('https://document.kirigaya.cn/docs/i18n-haru/1.html'));
+            }
+        }
         return undefined;
     }
-    const filePath = path.join(GlobalConfig.root, filename);
     const res = await parseFileByParseMode(filePath);
 
     if (res) {
@@ -428,7 +505,7 @@ export function getDefaultI18nItem() {
     const item = I18nTextMap.get(main);
     
     if (item === undefined) {
-        const { t } = vscode.l10n;
+
         const firstOne = getFirstOneI18nItem();
         if (firstOne === undefined) {
             return undefined;
@@ -456,7 +533,7 @@ export function getDisplayI18nItem() {
     const item = I18nTextMap.get(display);
     
     if (item === undefined) {
-        const { t } = vscode.l10n;
+
         const firstOne = getFirstOneI18nItem();
         if (firstOne === undefined) {
             return undefined;

@@ -1,5 +1,8 @@
-// 参考 ISO 639语言编码 https://kirigaya.cn/blog/article?seq=68
+import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as fspath from 'path';
 
+// 参考 ISO 639语言编码 https://kirigaya.cn/blog/article?seq=68
 export interface ISOItem {
     code: string,
     name: string
@@ -65,3 +68,46 @@ export const ISOCodeArray: ISOItem[] = [
     { code: "zh-sg",    name: "繁體中文" },
     { code: "zh-hant",  name: "繁體中文" }
 ];
+
+export const ValidISOCode = new Set();
+for (const item of ISOCodeArray) {
+    ValidISOCode.add(item.code);
+}
+
+interface ICustomL10n {
+    bundle: Record<string, string>,
+    uri?: vscode.Uri
+}
+
+const customL10n: ICustomL10n = {
+    bundle: {},
+    uri: undefined
+}
+
+export function initialiseCustomL10n(context: vscode.ExtensionContext) {
+    if (vscode.l10n.bundle === undefined) {
+        const defaultBundlePath = fspath.join(context.extensionPath, 'l10n/bundle.l10n.en.json');
+        const bundle = JSON.parse(fs.readFileSync(defaultBundlePath, { encoding: 'utf-8' }));
+        Object.assign(customL10n.bundle, bundle);
+        customL10n.uri = vscode.Uri.file(defaultBundlePath);
+    }
+}
+
+/**
+ * @description vscode 默认的 i18n bundle 在默认语言（en）时，是空的，此时需要我们自己做处理
+ * 为了方便开发，写一个包装函数，只支持无名参数，该函数只与 i18n Haru 的功能多语言呈现有关，与用户使用无关
+ * @param message 
+ * @param args 
+ */
+export function t(message: string, ...args: string[]): string {
+    if (vscode.l10n.bundle === undefined) {
+        const messageContent = customL10n.bundle[message] || message;
+        for (let i = 0;i < args.length; ++ i) {
+            const placeholder = `{${i}}`;
+            messageContent.replace(placeholder, args[i]);
+        }
+        return messageContent;
+    } else {
+        return vscode.l10n.t(message, ...args);
+    }
+}

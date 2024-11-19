@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { JsonSuggest } from './diagnostics';
 import { getDefaultI18nItem, GlobalConfig, i18nFileSelectors, I18nTextMap, lspLangSelectors } from '../global';
+import { t } from '../i18n';
 
 class I18nJsonProvider implements vscode.CodeActionProvider {
     public async provideCodeActions(document: vscode.TextDocument, range: vscode.Range | vscode.Selection, context: vscode.CodeActionContext, token: vscode.CancellationToken): Promise<(vscode.CodeAction | vscode.Command)[] | null | undefined> {
@@ -28,7 +29,6 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
 
     private async provideLackFix(document: vscode.TextDocument, diagnostic: vscode.Diagnostic): Promise<vscode.CodeAction[]> {
         const fixes: vscode.CodeAction[] = [];
-        const { t } = vscode.l10n;
         if (typeof diagnostic.code !== 'object') {
             return fixes;
         }
@@ -120,7 +120,6 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
     // TODO: 解决屎山代码 
     private async provideRedundantFix(document: vscode.TextDocument, diagnostic: vscode.Diagnostic): Promise<vscode.CodeAction[]> {
         const fixes: vscode.CodeAction[] = [];
-        const { t } = vscode.l10n;
         if (typeof diagnostic.code !== 'object') {
             return fixes;
         }

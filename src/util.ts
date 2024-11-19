@@ -5,8 +5,7 @@ import * as path from 'path';
 
 import { franc } from 'franc';
 import * as langs from 'langs';
-
-const { t } = vscode.l10n;
+import { t } from './i18n';
 
 export function detectLanguageISO(text: string): string {
     // 使用 franc 检测语言
@@ -97,7 +96,6 @@ function findI18nItemByUri(uri: vscode.Uri) {
 
 
 export async function addI18nToken(context: vscode.ExtensionContext) {
-    const { t } = vscode.l10n;
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
         return; // 如果没有活动编辑器，则返回
@@ -198,7 +196,6 @@ interface I18nQuickItem extends vscode.QuickPickItem {
 }
 
 export async function deleteI18nToken(context: vscode.ExtensionContext) {
-    const { t } = vscode.l10n;
     const i18nItem = getDefaultI18nItem();
     if (!i18nItem) {
         vscode.window.showErrorMessage(t('error.command.add-token.cannot-get-default-i18n-item'));
@@ -270,7 +267,7 @@ export async function implChange(uri: vscode.Uri) {
                 const translation = json[message] as string;
                 i18nItem.content[message] = translation;
             }
-            fs.writeFileSync(i18nItem.file, JSON.stringify(i18nItem.content, null, '  '));
+            await updateAll();
         } catch (error) {
             vscode.window.showErrorMessage(t('error.command.impl-change.parse-json', `${error}`));
         }
