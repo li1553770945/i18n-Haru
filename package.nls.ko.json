@@ -9,5 +9,14 @@
     "i18n-haru.line-hint-max-length.title": "줄 내 힌트 최대 문자 수, 기본값은 10",
     "i18n-haru.add-token.title": "i18n 토큰 추가",
     "i18n-haru.t-quote.title": "t 함수 내부의 문자열 따옴표, 기본값은 '",
-    "i18n-haru.delete-token.title": "i18n 토큰 삭제"
+    "i18n-haru.delete-token.title": "i18n 토큰 삭제",
+    "i18n-haru.custom-language-mapping.title": "ISO 언어에 대한 i18n 파일 경로 사용자 정의, 자세한 내용은 https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系 참조",
+    "i18n-haru.extract-unfinished-message.title": "현재 파일에서 미완료된 번역 부분을 추출하고 번역 프롬프트 생성",
+    "i18n-haru.impl-change-to-origin.title": "현재 편집기 내의 i18n 메시지를 왼쪽의 원본 파일에 덮어쓰기",
+    "i18n-haru.translator.name.title": "선택된 번역기",
+    "i18n-haru.translator.name.enum.none.title": "번역기를 선택하지 않음",
+    "i18n-haru.translator.name.enum.chatgpt.title": "chatgpt 선택",
+    "i18n-haru.translator.name.enum.deepseek.title": "deepseek 선택",
+    "i18n-haru.translator.name.enum.kimi.title": "kimi 선택",
+    "i18n-haru.translator.apiKey.title": "번역기 호출을 위한 API 키"
 }

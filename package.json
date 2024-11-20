@@ -115,6 +115,28 @@
                 "i18n-haru.custom-language-mapping": {
                     "type": "object",
                     "description": "%i18n-haru.custom-language-mapping.title%"
+                },
+                "i18n-haru.translator-apiKey": {
+                    "type": "string",
+                    "default": "",
+                    "description": "%i18n-haru.translator.apiKey.title%"
+                },
+                "i18n-haru.translator-name": {
+                    "type": "string",
+                    "enum": [
+                        "none",
+                        "chatgpt",
+                        "deepseek",
+                        "kimi"
+                    ],
+                    "enumDescriptions": [
+                        "%i18n-haru.translator.name.enum.none.title%",
+                        "%i18n-haru.translator.name.enum.chatgpt.title%",
+                        "%i18n-haru.translator.name.enum.deepseek.title%",
+                        "%i18n-haru.translator.name.enum.kimi.title%"
+                    ],
+                    "default": "none",
+                    "description": "%i18n-haru.translator.name.title%"
                 }
             }
         },
@@ -219,6 +241,7 @@
         "franc": "^6.2.0",
         "js-yaml": "^4.1.0",
         "jsonc-parser": "^3.3.1",
-        "langs": "^2.0.0"
+        "langs": "^2.0.0",
+        "openai": "^4.72.0"
     }
 }

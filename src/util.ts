@@ -6,6 +6,7 @@ import * as path from 'path';
 import { franc } from 'franc';
 import * as langs from 'langs';
 import { t } from './i18n';
+import { LlmName, translate } from './llm';
 
 export function detectLanguageISO(text: string): string {
     // 使用 franc 检测语言
@@ -143,9 +144,34 @@ export async function addI18nToken(context: vscode.ExtensionContext) {
                 return;
             }
 
+            // 使用翻译器进行翻译，如果有的话
+            const translatorName = vscode.workspace.getConfiguration('i18n-haru').get<LlmName>('translator-name') || 'none';
+            async function elegantTranslator(messageContent: string, translator: LlmName) {
+                if (translator === 'none') {
+                    // translator 为 none 时，实际不会引起阻塞
+                    return await translate(messageContent, translator);
+                } else {
+                    return await vscode.window.withProgress({
+                        title: t('info.command.add-token.use-translator', translator),
+                        location: vscode.ProgressLocation.Window
+                    }, async () => {
+                        return await translate(messageContent, translator);
+                    });
+                }
+            }
+            
+            const translateMessages = await elegantTranslator(selectedText, translatorName);
+            if (translateMessages === undefined) {
+                return;
+            }
+
+            // 把主语言也加入进去
+            translateMessages[i18nItem.code] = selectedText;
+
             // 加载，写入，重新解析
             for (const [code, item] of I18nTextMap.entries()) {
-                item.content[tokeName] = selectedText;
+                const translation = translateMessages[code];
+                item.content[tokeName] = translation;
                 fs.writeFileSync(item.file, JSON.stringify(item.content, null, '    '));
             }
 

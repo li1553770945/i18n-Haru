@@ -9,5 +9,14 @@
     "i18n-haru.line-hint-max-length.title": "Максимальное количество символов для встроенной подсказки, по умолчанию 10",
     "i18n-haru.add-token.title": "Добавить токен i18n",
     "i18n-haru.t-quote.title": "Кавычки для строк внутри функции t, по умолчанию '",
-    "i18n-haru.delete-token.title": "Удалить токен i18n"
+    "i18n-haru.delete-token.title": "Удалить токен i18n",
+    "i18n-haru.custom-language-mapping.title": "Настройка путей файлов i18n для языков ISO, подробности см. на https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系",
+    "i18n-haru.extract-unfinished-message.title": "Извлечение незавершенных частей перевода из текущего файла и генерация подсказок для перевода",
+    "i18n-haru.impl-change-to-origin.title": "Перезаписать i18n сообщение в текущем редакторе в исходный файл слева",
+    "i18n-haru.translator.name.title": "Выбранный переводчик",
+    "i18n-haru.translator.name.enum.none.title": "Не выбирать переводчика",
+    "i18n-haru.translator.name.enum.chatgpt.title": "Выбрать chatgpt",
+    "i18n-haru.translator.name.enum.deepseek.title": "Выбрать deepseek",
+    "i18n-haru.translator.name.enum.kimi.title": "Выбрать kimi",
+    "i18n-haru.translator.apiKey.title": "API ключ для вызова переводчика"
 }

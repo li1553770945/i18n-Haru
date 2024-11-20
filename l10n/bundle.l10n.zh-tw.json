@@ -28,5 +28,10 @@
     "error.parse-custom-mapping.parse-error": "解析自定義 i18n 配置文件錯誤，錯誤原因: ",
     "info.config.custom-language-mapping": "如果你希望自定義 i18n 配置文件和 ISO 639 的對應關係，請考慮配置 i18n-haru.custom-language-mapping，詳細請參考： https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定義【語言-配置文件】映射關係",
     "info.lookup-document": "查看參考文檔",
-    "warn.update-i18n.iso-639-not-found": "無法找到 {0} 的所匹配的 ISO 639 語言代碼，故無法載入 i18n Haru 中。"
+    "warn.update-i18n.iso-639-not-found": "無法找到 {0} 的所匹配的 ISO 639 語言代碼，故無法載入 i18n Haru 中。",
+    "error.translate.lack-api-key.message": "您當前指定了 {0} 作為翻譯器，但是卻沒有指定對應的 apiKey，請通過 i18n-haru.translator.apiKey 來更新當前翻譯器的 apiKey。",
+    "error.translate.invalid-llm-return-result": "大模型返回的數據結構無效，請嘗試【手動將 i18n message content 輸入大模型中進行翻譯】或者【更換模型後重新嘗試】，暫時先將基準語言的文本作為 message content 進行填充",
+    "warn.translate.llm-lack-code": "大模型的缺失如下語言代碼的翻譯結果：{0}。暫時使用基準語言的 message content 替換。",
+    "info.command.add-token.use-translator": "正在使用 {0} 進行翻譯",
+    "error.translate.action.write-apikey": "配置 apiKey"
 }

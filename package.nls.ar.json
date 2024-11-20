@@ -9,5 +9,14 @@
     "i18n-haru.line-hint-max-length.title": "الحد الأقصى لعدد الأحرف للتلميح الداخلي، الافتراضي هو 10",
     "i18n-haru.add-token.title": "إضافة رمز i18n",
     "i18n-haru.t-quote.title": "علامات الاقتباس للسلاسل داخل وظيفة t، الافتراضي هو '",
-    "i18n-haru.delete-token.title": "حذف رمز i18n"
+    "i18n-haru.delete-token.title": "حذف رمز i18n",
+    "i18n-haru.custom-language-mapping.title": "تخصيص مسارات ملفات i18n للغات ISO، للحصول على التفاصيل انظر https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系",
+    "i18n-haru.extract-unfinished-message.title": "استخراج أجزاء غير مكتملة من الترجمة من الملف الحالي، وإنشاء تنبيهات الترجمة",
+    "i18n-haru.impl-change-to-origin.title": "الكتابة فوق رسالة i18n في المحرر الحالي إلى الملف المصدر على اليسار",
+    "i18n-haru.translator.name.title": "المترجم المحدد",
+    "i18n-haru.translator.name.enum.none.title": "لا تختار أي مترجم",
+    "i18n-haru.translator.name.enum.chatgpt.title": "اختر chatgpt",
+    "i18n-haru.translator.name.enum.deepseek.title": "اختر deepseek",
+    "i18n-haru.translator.name.enum.kimi.title": "اختر kimi",
+    "i18n-haru.translator.apiKey.title": "مفتاح API لاستدعاء المترجم"
 }

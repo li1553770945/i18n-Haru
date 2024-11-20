@@ -28,5 +28,10 @@
     "error.parse-custom-mapping.parse-error": "خطأ في تحليل ملف تكوين i18n المخصص، سبب الخطأ: ",
     "info.config.custom-language-mapping": "إذا كنت ترغب في تخصيص علاقة تعيين ملفات تكوين i18n و ISO 639، فكر في تكوين i18n-haru.custom-language-mapping، للحصول على التفاصيل، راجع: https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系",
     "info.lookup-document": "عرض الوثائق المرجعية",
-    "warn.update-i18n.iso-639-not-found": "تعذر العثور على رمز لغة ISO 639 المطابق لـ {0}، لذلك لا يمكن تحميله في i18n Haru."
+    "warn.update-i18n.iso-639-not-found": "تعذر العثور على رمز لغة ISO 639 المطابق لـ {0}، لذلك لا يمكن تحميله في i18n Haru.",
+    "error.translate.lack-api-key.message": "لقد حددت {0} كمترجم، لكنك لم تحدد مفتاح api المقابل. يرجى تحديث مفتاح api للمترجم الحالي عبر i18n-haru.translator.apiKey.",
+    "error.translate.invalid-llm-return-result": "هيكل البيانات الذي تم إرجاعه من قبل النموذج الكبير غير صالح. يرجى محاولة إدخال محتوى رسالة i18n يدويًا في النموذج الكبير للترجمة أو تغيير النموذج والمحاولة مرة أخرى. حاليًا، سيتم استخدام النص في اللغة الأساسية كمحتوى الرسالة.",
+    "warn.translate.llm-lack-code": "النموذج الكبير يفتقد نتائج الترجمة لرموز اللغات التالية: {0}. سيتم استخدام محتوى الرسالة في اللغة الأساسية بشكل مؤقت.",
+    "info.command.add-token.use-translator": "يتم استخدام {0} للترجمة",
+    "error.translate.action.write-apikey": "تكوين مفتاح api"
 }

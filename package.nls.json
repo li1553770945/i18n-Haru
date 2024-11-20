@@ -9,8 +9,14 @@
     "i18n-haru.line-hint-max-length.title": "Maximum Number of Characters for Inline Hint, default is 10",
     "i18n-haru.add-token.title": "Add i18n Token",
     "i18n-haru.t-quote.title": "Quotes for Strings Inside t Function, default is '",
-    "i18n-haru.delete-token.title": "Delete i18n Token",
-    "i18n-haru.custom-language-mapping.title": "",
-    "i18n-haru.extract-unfinished-message.title": "",
-    "i18n-haru.impl-change-to-origin.title": ""
+    "i18n-haru.delete-token.title": "Delete i18n token",
+    "i18n-haru.custom-language-mapping.title": "Customize i18n file paths for ISO languages, see details at https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系",
+    "i18n-haru.extract-unfinished-message.title": "Extract unfinished translation parts from the current file and generate translation prompts",
+    "i18n-haru.impl-change-to-origin.title": "Overwrite the i18n message in the current editor to the source file on the left",
+    "i18n-haru.translator.name.title": "Selected translator",
+    "i18n-haru.translator.name.enum.none.title": "Do not select any translator",
+    "i18n-haru.translator.name.enum.chatgpt.title": "Select chatgpt",
+    "i18n-haru.translator.name.enum.deepseek.title": "Select deepseek",
+    "i18n-haru.translator.name.enum.kimi.title": "Select kimi",
+    "i18n-haru.translator.apiKey.title": "API KEY for calling the translator"
 }

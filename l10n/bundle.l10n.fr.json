@@ -28,5 +28,10 @@
     "error.parse-custom-mapping.parse-error": "Erreur lors de l'analyse du fichier de configuration i18n personnalisé, raison de l'erreur : ",
     "info.config.custom-language-mapping": "Si vous souhaitez personnaliser le mappage entre les fichiers de configuration i18n et ISO 639, envisagez de configurer i18n-haru.custom-language-mapping. Pour plus de détails, veuillez consulter : https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系",
     "info.lookup-document": "Afficher la documentation de référence",
-    "warn.update-i18n.iso-639-not-found": "Impossible de trouver un code de langue ISO 639 correspondant à {0}, il ne peut donc pas être chargé dans i18n Haru."
+    "warn.update-i18n.iso-639-not-found": "Impossible de trouver un code de langue ISO 639 correspondant à {0}, il ne peut donc pas être chargé dans i18n Haru.",
+    "error.translate.lack-api-key.message": "Vous avez spécifié {0} comme traducteur, mais n'avez pas spécifié la clé api correspondante. Veuillez mettre à jour la clé api pour le traducteur actuel via i18n-haru.translator.apiKey.",
+    "error.translate.invalid-llm-return-result": "La structure de données renvoyée par le grand modèle est invalide. Veuillez essayer de saisir manuellement le contenu du message i18n dans le grand modèle pour la traduction ou de changer de modèle et réessayer. Pour l'instant, le texte dans la langue de base sera utilisé comme contenu du message.",
+    "warn.translate.llm-lack-code": "Le grand modèle manque de résultats de traduction pour les codes de langue suivants : {0}. Le contenu du message dans la langue de base sera utilisé temporairement.",
+    "info.command.add-token.use-translator": "Utilisation de {0} pour la traduction",
+    "error.translate.action.write-apikey": "Configurer la clé api"
 }

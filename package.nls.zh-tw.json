@@ -9,8 +9,14 @@
     "i18n-haru.line-hint-max-length.title": "行內提示最大字符數量，默認為 10",
     "i18n-haru.add-token.title": "新增 i18n token",
     "i18n-haru.t-quote.title": "t 函數內部的字符串的引號，默認是 '",
-    "i18n-haru.delete-token.title": "刪除 i18n token",
-    "i18n-haru.custom-language-mapping.title": "",
-    "i18n-haru.extract-unfinished-message.title": "",
-    "i18n-haru.impl-change-to-origin.title": ""
+    "i18n-haru.delete-token.title": "刪除 i18n 令牌",
+    "i18n-haru.custom-language-mapping.title": "自定義 ISO 語言的 i18n 文件路徑，詳情請見 https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系",
+    "i18n-haru.extract-unfinished-message.title": "從當前文件提取尚未完成翻譯的部分，生成翻譯提示",
+    "i18n-haru.impl-change-to-origin.title": "將當前編輯器內的 i18n 訊息覆蓋寫入左側的源文件",
+    "i18n-haru.translator.name.title": "選擇的翻譯器",
+    "i18n-haru.translator.name.enum.none.title": "不選擇任何翻譯器",
+    "i18n-haru.translator.name.enum.chatgpt.title": "選擇 chatgpt",
+    "i18n-haru.translator.name.enum.deepseek.title": "選擇 deepseek",
+    "i18n-haru.translator.name.enum.kimi.title": "選擇 kimi",
+    "i18n-haru.translator.apiKey.title": "調用翻譯器的 API KEY"
 }

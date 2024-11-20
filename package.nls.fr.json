@@ -9,5 +9,14 @@
     "i18n-haru.line-hint-max-length.title": "Nombre maximum de caractères pour l'indice en ligne, par défaut 10",
     "i18n-haru.add-token.title": "Ajouter un jeton i18n",
     "i18n-haru.t-quote.title": "Guillemets pour les chaînes à l'intérieur de la fonction t, par défaut '",
-    "i18n-haru.delete-token.title": "Supprimer un jeton i18n"
+    "i18n-haru.delete-token.title": "Supprimer un jeton i18n",
+    "i18n-haru.custom-language-mapping.title": "Personnaliser les chemins des fichiers i18n pour les langues ISO, pour plus de détails voir https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系",
+    "i18n-haru.extract-unfinished-message.title": "Extraire les parties non terminées de la traduction du fichier actuel et générer des invites de traduction",
+    "i18n-haru.impl-change-to-origin.title": "Écraser le message i18n dans l'éditeur actuel dans le fichier source à gauche",
+    "i18n-haru.translator.name.title": "Traducteur sélectionné",
+    "i18n-haru.translator.name.enum.none.title": "Ne sélectionnez aucun traducteur",
+    "i18n-haru.translator.name.enum.chatgpt.title": "Sélectionnez chatgpt",
+    "i18n-haru.translator.name.enum.deepseek.title": "Sélectionnez deepseek",
+    "i18n-haru.translator.name.enum.kimi.title": "Sélectionnez kimi",
+    "i18n-haru.translator.apiKey.title": "Clé API pour appeler le traducteur"
 }

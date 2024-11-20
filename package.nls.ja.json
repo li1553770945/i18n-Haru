@@ -9,5 +9,14 @@
     "i18n-haru.line-hint-max-length.title": "行内ヒントの最大文字数、デフォルトは 10",
     "i18n-haru.add-token.title": "i18n トークンを追加",
     "i18n-haru.t-quote.title": "t 関数内の文字列の引用符、デフォルトは '",
-    "i18n-haru.delete-token.title": "i18n トークンを削除"
+    "i18n-haru.delete-token.title": "i18n トークンを削除",
+    "i18n-haru.custom-language-mapping.title": "ISO 言語の i18n ファイルパスをカスタマイズ、詳細は https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系 を参照",
+    "i18n-haru.extract-unfinished-message.title": "現在のファイルから未完了の翻訳部分を抽出し、翻訳プロンプトを生成",
+    "i18n-haru.impl-change-to-origin.title": "現在のエディタ内の i18n メッセージを左側のソースファイルに上書き",
+    "i18n-haru.translator.name.title": "選択された翻訳者",
+    "i18n-haru.translator.name.enum.none.title": "翻訳者を選択しない",
+    "i18n-haru.translator.name.enum.chatgpt.title": "chatgpt を選択",
+    "i18n-haru.translator.name.enum.deepseek.title": "deepseek を選択",
+    "i18n-haru.translator.name.enum.kimi.title": "kimi を選択",
+    "i18n-haru.translator.apiKey.title": "翻訳者を呼び出すための API KEY"
 }

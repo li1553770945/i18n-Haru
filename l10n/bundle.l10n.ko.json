@@ -28,5 +28,10 @@
     "error.parse-custom-mapping.parse-error": "사용자 정의 i18n 설정 파일 파싱 오류, 오류 이유: ",
     "info.config.custom-language-mapping": "i18n 설정 파일과 ISO 639의 매핑 관계를 사용자 정의하려면 i18n-haru.custom-language-mapping을 구성하는 것을 고려하세요. 자세한 내용은 다음을 참조하세요: https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系",
     "info.lookup-document": "참조 문서 보기",
-    "warn.update-i18n.iso-639-not-found": "{0}에 해당하는 ISO 639 언어 코드를 찾을 수 없어 i18n Haru에 로드할 수 없습니다."
+    "warn.update-i18n.iso-639-not-found": "{0}에 해당하는 ISO 639 언어 코드를 찾을 수 없어 i18n Haru에 로드할 수 없습니다.",
+    "error.translate.lack-api-key.message": "{0}을 번역기로 지정했지만 해당 apiKey를 지정하지 않았습니다. i18n-haru.translator.apiKey를 통해 현재 번역기의 apiKey를 업데이트하십시오.",
+    "error.translate.invalid-llm-return-result": "대규모 모델에서 반환된 데이터 구조가 유효하지 않습니다. i18n 메시지 콘텐츠를 수동으로 대규모 모델에 입력하여 번역을 시도하거나 모델을 변경하여 다시 시도하십시오. 현재는 기본 언어의 텍스트를 메시지 콘텐츠로 사용합니다.",
+    "warn.translate.llm-lack-code": "대규모 모델은 다음 언어 코드에 대한 번역 결과가 누락되었습니다: {0}. 일시적으로 기본 언어의 메시지 콘텐츠를 사용합니다.",
+    "info.command.add-token.use-translator": "{0}을 사용하여 번역 중",
+    "error.translate.action.write-apikey": "apiKey 구성"
 }

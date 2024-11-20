@@ -95,6 +95,7 @@ export async function initialise(context: vscode.ExtensionContext) {
 
         // 配置文件发生变化时
         vscode.workspace.onDidChangeConfiguration(async event => {
+            
             if (event.affectsConfiguration('i18n-haru')) {
                 await updateAll();
             }

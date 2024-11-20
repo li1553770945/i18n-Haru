@@ -9,5 +9,14 @@
     "i18n-haru.line-hint-max-length.title": "Maximale Anzahl von Zeichen für Inline-Hinweis, Standard ist 10",
     "i18n-haru.add-token.title": "i18n-Token hinzufügen",
     "i18n-haru.t-quote.title": "Anführungszeichen für Zeichenfolgen innerhalb der t-Funktion, Standard ist '",
-    "i18n-haru.delete-token.title": "i18n-Token löschen"
+    "i18n-haru.delete-token.title": "i18n-Token löschen",
+    "i18n-haru.custom-language-mapping.title": "Anpassen der i18n-Dateipfade für ISO-Sprachen, für Details siehe https://document.kirigaya.cn/docs/i18n-haru/config.custom-iso639.html#自定义【语言-配置文件】映射关系",
+    "i18n-haru.extract-unfinished-message.title": "Unvollständige Übersetzungsteile aus der aktuellen Datei extrahieren und Übersetzungsprompts generieren",
+    "i18n-haru.impl-change-to-origin.title": "Überschreiben Sie die i18n-Nachricht im aktuellen Editor in die Quelldatei auf der linken Seite",
+    "i18n-haru.translator.name.title": "Ausgewählter Übersetzer",
+    "i18n-haru.translator.name.enum.none.title": "Wählen Sie keinen Übersetzer aus",
+    "i18n-haru.translator.name.enum.chatgpt.title": "Wählen Sie chatgpt",
+    "i18n-haru.translator.name.enum.deepseek.title": "Wählen Sie deepseek",
+    "i18n-haru.translator.name.enum.kimi.title": "Wählen Sie kimi",
+    "i18n-haru.translator.apiKey.title": "API-Schlüssel zum Aufrufen des Übersetzers"
 }

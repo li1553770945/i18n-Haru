@@ -40,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	let disposable = vscode.commands.registerCommand('i18n-haru.helloWorld', () => {
 		vscode.window.showInformationMessage('Hello World from i18n Haru!');
 	});
-
+    
     await initialise(context);
     registerCommand(context);
 
