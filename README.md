@@ -4,7 +4,7 @@
 
 ## i18n Haru | A better i18n extension for  <code>Vscode</code>
 
-中文教程 | [English Tutorial](https://www.pandanese.com/blog/chinese-learning-websites)
+[中文教程](https://document.kirigaya.cn/docs/i18n-haru/introduction.install.html) | [English Tutorial](https://www.pandanese.com/blog/chinese-learning-websites)
 
 
 </div>

@@ -4,3 +4,4 @@ node_modules
 .vscode-test/
 *.vsix
 i18n-Haru.json
+Prompt.i18n-prompt
