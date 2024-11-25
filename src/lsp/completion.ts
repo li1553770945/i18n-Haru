@@ -102,7 +102,7 @@ export function makeI18nKeyProfile(i18nKey: string, targetContent: string): stri
             content = '```plaintext\n' + content.trim() + '\n```';
         }
 
-        profileContent += `#### $(globe) ${langCode} \t $(search) ${gotoDefinition}\n${content}\n`;
+        profileContent += `$(globe) ${langCode} \t $(search) ${gotoDefinition}\n${content}\n`;
     }
 
     /// 支持含参数的 i18n 提醒

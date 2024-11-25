@@ -2,7 +2,7 @@
     "name": "i18n-haru",
     "displayName": "i18n Haru",
     "description": "A better i18n extension for Vscode to develop js, ts, vue and so on",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "publisher": "kirigaya",
     "author": {
         "email": "1193466151@qq.com",

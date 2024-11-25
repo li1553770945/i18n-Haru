@@ -144,6 +144,10 @@ export async function addI18nToken(context: vscode.ExtensionContext) {
                 return;
             }
 
+            // 替换字符
+            const quote = vscode.workspace.getConfiguration('i18n-haru').get('t-quote') || '\'';
+            editor.edit(builder => builder.replace(editor.selection, `t(${quote}${tokeName}${quote})`));
+
             // 使用翻译器进行翻译，如果有的话
             const translatorName = vscode.workspace.getConfiguration('i18n-haru').get<LlmName>('translator-name') || 'none';
             async function elegantTranslator(messageContent: string, translator: LlmName) {
@@ -176,9 +180,6 @@ export async function addI18nToken(context: vscode.ExtensionContext) {
             }
 
             await updateAll();
-
-            const quote = vscode.workspace.getConfiguration('i18n-haru').get('t-quote') || '\'';
-            editor.edit(builder => builder.replace(editor.selection, `t(${quote}${tokeName}${quote})`))
         }
     }
 }
@@ -264,7 +265,7 @@ export function isValidT(range: vscode.Range | undefined, document: vscode.TextD
         return true;
     }
 
-    const prePos = new vscode.Position(start.line, start.character);
+    const prePos = new vscode.Position(start.line, start.character);    
     const preRange = document.getWordRangeAtPosition(prePos, /[a-zA-Z_][a-zA-Z0-9_]*/);
     
     if (!preRange) {
@@ -304,4 +305,24 @@ export async function implChange(uri: vscode.Uri) {
     }
 
     currentTranslation.code = '';
+}
+
+/**
+ * @description 同步防抖 wrapper
+ * @param fn 
+ * @param timeout 
+ * @returns 
+ */
+export function debouncWrapper<T>(fn: (...args: any[]) => T, timeout: number): (...args: any[]) => Promise<T> {
+    let timer: NodeJS.Timeout | undefined = undefined;
+    return function(...args: any[]): Promise<T> {
+        return new Promise(resolve => {
+            if (timer) {
+                clearTimeout(timer);
+            }
+            timer = setTimeout(() => {
+                resolve(fn(...args));
+            }, timeout);
+        });
+    }
 }

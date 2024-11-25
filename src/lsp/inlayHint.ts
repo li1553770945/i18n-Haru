@@ -47,14 +47,15 @@ function findMatchingStrings(
     lineText: string
 ): MatchResult[] {
 
-    const regex = /t\(([^)].*)\)/g;
+    const regex = /\bt\(["'][^"']*["'].*\)/g;
     const matches: MatchResult[] = [];
     let match;
     
-    while ((match = regex.exec(lineText)) !== null) {
+    while ((match = regex.exec(lineText)) !== null) {        
         const matchString = match[0];
         const start = new vscode.Position(line, match.index);
-        const range = new vscode.Range(start, start);        
+        const range = new vscode.Range(start, start);
+                
         if (!isValidT(range, document)) {
             continue;
         }
@@ -64,13 +65,12 @@ function findMatchingStrings(
             lastQIndex = matchString.lastIndexOf('\'');
         }
 
-        const i18nStringMatch = /t\(["']([^"']*)["'].*\)/.exec(matchString);
+        const i18nStringMatch = /t\(["']([^"']*)["'].*\)/.exec(matchString);        
         if (i18nStringMatch && i18nStringMatch[1] !== undefined && lastQIndex !== -1) {
             const column = match.index + lastQIndex + 1;            
             matches.push({ match: i18nStringMatch[1], column });
         }
-    }
-
+    }    
     return matches;
 }
 
