@@ -22,15 +22,26 @@ class I18nProvider implements vscode.InlayHintsProvider {
         
         // -+ 3 稍微优化一下加载
         const visibleMargin = 0;
-        for (let line = Math.max(visibleRange.start.line - visibleMargin, 0); line <= visibleRange.end.line + visibleMargin; ++ line) {
+        const lineStart = Math.max(visibleRange.start.line - visibleMargin, 0);
+        const lineEnd = visibleRange.end.line + visibleMargin;        
+        const maxHintLength = vscode.workspace.getConfiguration('i18n-haru').get<number>('line-hint-max-length') || 10;
+
+        for (let line = lineStart; line <= lineEnd; ++ line) {            
             const lineText = document.lineAt(line).text;
-            const maxHintLength = vscode.workspace.getConfiguration('i18n-haru').get<number>('line-hint-max-length') || 10;
-            if (lineText.length > 0) {
-                const hint = makeLineTextHint(document, line, lineText, i18nItem, maxHintLength);                
-                inlayHints.push(...hint);
+
+            if (lineText.trim().length === 0) {
+                continue;
+            }
+            const hints = makeLineTextHint(document, line, lineText, i18nItem, maxHintLength);
+            if (hints.length > 0) {
+                console.log(hints);
+                inlayHints.push(...hints);                    
             }
         }
-
+        
+        console.log('total inlay hints', inlayHints);
+        
+        
         return inlayHints;
     }
 }
@@ -51,12 +62,12 @@ function findMatchingStrings(
     const matches: MatchResult[] = [];
     let match;
     
-    while ((match = regex.exec(lineText)) !== null) {        
+    while ((match = regex.exec(lineText)) !== null) {           
         const matchString = match[0];
         const start = new vscode.Position(line, match.index);
         const range = new vscode.Range(start, start);
                 
-        if (!isValidT(range, document)) {
+        if (!isValidT(range, document)) {            
             continue;
         }
         
@@ -65,12 +76,13 @@ function findMatchingStrings(
             lastQIndex = matchString.lastIndexOf('\'');
         }
 
-        const i18nStringMatch = /t\(["']([^"']*)["'].*\)/.exec(matchString);        
+        const i18nStringMatch = /\bt\(["']([^"']*)["'].*\)/.exec(matchString);        
         if (i18nStringMatch && i18nStringMatch[1] !== undefined && lastQIndex !== -1) {
             const column = match.index + lastQIndex + 1;            
             matches.push({ match: i18nStringMatch[1], column });
         }
-    }    
+    }
+
     return matches;
 }
 
@@ -86,7 +98,7 @@ function makeLineTextHint(
     
     for (const match of matches) {
         const targetI18nKey = match.match;
-        let content = i18nItem.content[targetI18nKey];
+        let content = i18nItem.content[targetI18nKey];        
         
         if (content === undefined) {
             content = t('info.lsp.common.undefined');
@@ -94,7 +106,7 @@ function makeLineTextHint(
             content = t('info.lsp.common.empty');
         } else {
             content = content.trim();
-        }
+        }        
 
         if (content.length > maxHintLength) {
             content = content.slice(0, maxHintLength) + '...';
@@ -104,14 +116,14 @@ function makeLineTextHint(
         const hint = new vscode.InlayHint(pos, content, vscode.InlayHintKind.Type);
 
         const targetContent = i18nItem.content[targetI18nKey];
-        const profile = makeI18nKeyProfile(targetI18nKey, targetContent);
+        const profile = targetContent === undefined ? content : makeI18nKeyProfile(targetI18nKey, targetContent);
         const markdown = new vscode.MarkdownString(profile, true);
         hint.tooltip = markdown;
         hint.paddingLeft = true;
         hint.paddingRight = true;        
         hints.push(hint);
     }
-
+    
     return hints;
 }
 

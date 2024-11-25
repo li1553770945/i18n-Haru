@@ -7,6 +7,7 @@ import { franc } from 'franc';
 import * as langs from 'langs';
 import { t } from './i18n';
 import { LlmName, translate } from './llm';
+import { registerInlayHints } from './lsp/inlayHint';
 
 export function detectLanguageISO(text: string): string {
     // 使用 franc 检测语言
@@ -144,9 +145,19 @@ export async function addI18nToken(context: vscode.ExtensionContext) {
                 return;
             }
 
-            // 替换字符
+            // 替换字符，支持无名参数和具名参数
             const quote = vscode.workspace.getConfiguration('i18n-haru').get('t-quote') || '\'';
-            editor.edit(builder => builder.replace(editor.selection, `t(${quote}${tokeName}${quote})`));
+            const { namedParamters, unamedParameters } = parseMessageParameters(selectedText);
+            const translateArgs = [quote + tokeName + quote];
+            for (const param of unamedParameters) {
+                translateArgs.push('arg' + param.id)
+            }
+            if (namedParamters.length > 0) {
+                const kwargs = namedParamters.map(param => param.name);
+                translateArgs.push('{ ' + kwargs.join(', ') + ' }');
+            }
+
+            editor.edit(builder => builder.replace(editor.selection, `t(${translateArgs.join(', ')})`));
 
             // 使用翻译器进行翻译，如果有的话
             const translatorName = vscode.workspace.getConfiguration('i18n-haru').get<LlmName>('translator-name') || 'none';
@@ -325,4 +336,30 @@ export function debouncWrapper<T>(fn: (...args: any[]) => T, timeout: number): (
             }, timeout);
         });
     }
+}
+
+interface ParameterResult {
+    unamedParameters: { id: number }[],
+    namedParamters: { name: string }[]
+};
+
+export function parseMessageParameters(content: string): ParameterResult {
+    const regex = /\{(.*?)\}/g;
+    const unamedParameters = [];
+    const namedParamters = [];
+    
+    for (const match of content.match(regex) || []) {
+        const paramName = match.slice(1, -1);
+        if (!isNaN(parseInt(paramName))) {
+            const unameId = parseInt(paramName);
+            unamedParameters.push({
+                id: unameId
+            });
+        } else {
+            namedParamters.push({
+                name: paramName
+            });
+        }
+    }
+    return { namedParamters, unamedParameters };
 }

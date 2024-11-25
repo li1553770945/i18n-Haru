@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { defaultRange, getDefaultI18nItem, I18nTextMap, lspLangSelectors } from '../global';
-import { isValidT } from '../util';
+import { isValidT, parseMessageParameters } from '../util';
 import { t } from '../i18n';
 
 class I18nProvider implements vscode.CompletionItemProvider {
@@ -106,6 +106,7 @@ export function makeI18nKeyProfile(i18nKey: string, targetContent: string): stri
     }
 
     /// 支持含参数的 i18n 提醒
+    /// 文档：https://document.kirigaya.cn/docs/i18n-haru/introduction.message.html#%E6%97%A0%E5%90%8D%E5%8F%82%E6%95%B0%E5%92%8C%E5%85%B7%E5%90%8D%E5%8F%82%E6%95%B0
     /// 无名参数 i18n
     /// "nice-dinner": "今天我们去了 {0} 吃了 {1} 这道菜，味道好极了"
     /// 调用方式： t("nice-dinner", name, mealName);
@@ -115,34 +116,19 @@ export function makeI18nKeyProfile(i18nKey: string, targetContent: string): stri
     /// 混合使用也是可以的：具体要看 i18n 框架是如何支持的
     let profile = '### I18n Key\n';
     const regex = /\{(.*?)\}/g;
-    const unnamedParams = [];
-    const namedParams = [];
-    
-    for (const match of targetContent.match(regex) || []) {
-        const paramName = match.slice(1, -1);
-        if (!isNaN(parseInt(paramName))) {
-            const unameId = parseInt(paramName);
-            unnamedParams.push({
-                id: unameId
-            });
-        } else {
-            namedParams.push({
-                name: paramName
-            });
-        }
-    }
+    const { namedParamters, unamedParameters } = parseMessageParameters(targetContent);
 
-    if (unnamedParams.length === 0 && namedParams.length === 0) {
+    if (unamedParameters.length === 0 && namedParamters.length === 0) {
         profile += '```js\nt("' + i18nKey + '")\n```\n\n---\n\n';
     } else {
         const tList: string[] = ['"' + i18nKey + '"'];
-        unnamedParams.forEach(param => tList.push('arg' + param.id));
-        if (namedParams.length > 0) {
-            const nameParamString = `{ ${namedParams.map(param => param.name).join(', ')} }`
+        unamedParameters.forEach(param => tList.push('arg' + param.id));
+        if (namedParamters.length > 0) {
+            const nameParamString = `{ ${namedParamters.map(param => param.name).join(', ')} }`
             tList.push(nameParamString);
         }
         profile += '```js\nt(' + tList.join(', ') + ')\n```\n';
-        profile += t('info.lsp.common.params-contain-info', unnamedParams.length.toString(), namedParams.length.toString()) + '\n\n---\n\n';
+        profile += t('info.lsp.common.params-contain-info', unamedParameters.length.toString(), namedParamters.length.toString()) + '\n\n---\n\n';
     }
 
     return profile + profileContent;
