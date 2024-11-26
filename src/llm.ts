@@ -27,7 +27,7 @@ export async function translate(
             { title: t('error.translate.action.write-apikey'), value: true }
         ).then(res => {
             if (res?.value) {
-                vscode.commands.executeCommand('workbench.action.openSettings', 'i18n-haru.translator.apiKey');
+                vscode.commands.executeCommand('workbench.action.openSettings', 'i18n-haru.translator-apiKey');
             }
         });
 
