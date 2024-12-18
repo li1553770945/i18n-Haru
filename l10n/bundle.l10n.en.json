@@ -33,5 +33,7 @@
     "error.translate.invalid-llm-return-result": "The data structure returned by the large model is invalid. Please try manually inputting the i18n message content into the large model for translation or changing the model and trying again. For now, the text in the base language will be used as the message content.",
     "warn.translate.llm-lack-code": "The large model is missing translation results for the following language codes: {0}. The message content in the base language will be used temporarily.",
     "info.command.add-token.use-translator": "Using {0} for translation",
-    "error.translate.action.write-apikey": "Configure apiKey"
+    "error.translate.action.write-apikey": "Configure apiKey",
+    "info.common.open": "Open",
+    "info.common.select-import-source": "Select the import source"
 }

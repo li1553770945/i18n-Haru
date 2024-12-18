@@ -363,3 +363,29 @@ export function parseMessageParameters(content: string): ParameterResult {
     }
     return { namedParamters, unamedParameters };
 }
+
+
+/**
+ * @description 从其他文件夹中导入 i18n message
+ */
+export async function importMessage(uri: vscode.Uri) {
+    // 首先打开文件浏览器让用户选择导入源的文件夹（也就是其他项目的 i18n-haru.root）
+    // 此处必须选择 .vscode/setting.json
+    const res = await vscode.window.showOpenDialog({
+        title: t('info.common.select-import-source'),
+        openLabel: t('info.common.open'),
+        canSelectFiles: true,
+        canSelectMany: false,
+        canSelectFolders: false,
+        filters: {
+            'json': ['json']
+        }
+    });
+
+    if (!res) {
+        return;
+    }
+
+    const settingPath = res[0].fsPath;
+    
+}

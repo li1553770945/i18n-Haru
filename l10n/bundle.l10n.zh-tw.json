@@ -33,5 +33,7 @@
     "error.translate.invalid-llm-return-result": "大模型返回的數據結構無效，請嘗試【手動將 i18n message content 輸入大模型中進行翻譯】或者【更換模型後重新嘗試】，暫時先將基準語言的文本作為 message content 進行填充",
     "warn.translate.llm-lack-code": "大模型的缺失如下語言代碼的翻譯結果：{0}。暫時使用基準語言的 message content 替換。",
     "info.command.add-token.use-translator": "正在使用 {0} 進行翻譯",
-    "error.translate.action.write-apikey": "配置 apiKey"
+    "error.translate.action.write-apikey": "配置 apiKey",
+    "info.common.open": "打開",
+    "info.common.select-import-source": "選擇匯入來源"
 }

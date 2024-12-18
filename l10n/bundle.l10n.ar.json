@@ -33,5 +33,7 @@
     "error.translate.invalid-llm-return-result": "هيكل البيانات الذي تم إرجاعه من قبل النموذج الكبير غير صالح. يرجى محاولة إدخال محتوى رسالة i18n يدويًا في النموذج الكبير للترجمة أو تغيير النموذج والمحاولة مرة أخرى. حاليًا، سيتم استخدام النص في اللغة الأساسية كمحتوى الرسالة.",
     "warn.translate.llm-lack-code": "النموذج الكبير يفتقد نتائج الترجمة لرموز اللغات التالية: {0}. سيتم استخدام محتوى الرسالة في اللغة الأساسية بشكل مؤقت.",
     "info.command.add-token.use-translator": "يتم استخدام {0} للترجمة",
-    "error.translate.action.write-apikey": "تكوين مفتاح api"
+    "error.translate.action.write-apikey": "تكوين مفتاح api",
+    "info.common.open": "فتح",
+    "info.common.select-import-source": "اختر المصدر للاستيراد"
 }

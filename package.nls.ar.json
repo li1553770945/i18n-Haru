@@ -18,5 +18,6 @@
     "i18n-haru.translator.name.enum.chatgpt.title": "اختر chatgpt",
     "i18n-haru.translator.name.enum.deepseek.title": "اختر deepseek",
     "i18n-haru.translator.name.enum.kimi.title": "اختر kimi",
-    "i18n-haru.translator.apiKey.title": "مفتاح API لاستدعاء المترجم"
+    "i18n-haru.translator.apiKey.title": "مفتاح API لاستدعاء المترجم",
+    "i18n-haru.import-messages.title": "استيراد رسائل i18n"
 }

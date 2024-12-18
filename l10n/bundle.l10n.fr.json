@@ -33,5 +33,7 @@
     "error.translate.invalid-llm-return-result": "La structure de données renvoyée par le grand modèle est invalide. Veuillez essayer de saisir manuellement le contenu du message i18n dans le grand modèle pour la traduction ou de changer de modèle et réessayer. Pour l'instant, le texte dans la langue de base sera utilisé comme contenu du message.",
     "warn.translate.llm-lack-code": "Le grand modèle manque de résultats de traduction pour les codes de langue suivants : {0}. Le contenu du message dans la langue de base sera utilisé temporairement.",
     "info.command.add-token.use-translator": "Utilisation de {0} pour la traduction",
-    "error.translate.action.write-apikey": "Configurer la clé api"
+    "error.translate.action.write-apikey": "Configurer la clé api",
+    "info.common.open": "Ouvrir",
+    "info.common.select-import-source": "Sélectionnez la source d'importation"
 }

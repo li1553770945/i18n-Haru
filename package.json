@@ -80,6 +80,14 @@
                     "light": "icons/light/i18n-impl-change.svg"
                 },
                 "title": "%i18n-haru.impl-change-to-origin.title%"
+            },
+            {
+                "command": "i18n-haru.import-messages",
+                "icon": {
+                    "dark": "icons/dark/i18n-import",
+                    "light": "icons/light/i18n-import"
+                },
+                "title": "%i18n-haru.import-messages.title%"
             }
         ],
         "configuration": {
@@ -119,7 +127,7 @@
                 "i18n-haru.translator-apiKey": {
                     "type": "string",
                     "default": "",
-                    "description": "%i18n-haru.translator.apiKey.title%"
+                    "description": "%i18n-haru.translator-apiKey.title%"
                 },
                 "i18n-haru.translator-name": {
                     "type": "string",
@@ -136,7 +144,7 @@
                         "%i18n-haru.translator.name.enum.kimi.title%"
                     ],
                     "default": "none",
-                    "description": "%i18n-haru.translator.name.title%"
+                    "description": "%i18n-haru.translator-name.title%"
                 }
             }
         },
@@ -162,6 +170,11 @@
                     "command": "i18n-haru.impl-change-to-origin",
                     "when": "resourceFilename == 'i18n-Haru.json'",
                     "group": "navigation@3"
+                },
+                {
+                    "command": "i18n-haru.import-messages",
+                    "when": "resourceFilename == 'i18n-Haru.json'",
+                    "group": "navigation@4"
                 }
             ]
         },

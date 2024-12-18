@@ -4,11 +4,10 @@ import { isValidT } from '../util';
 
 class I18nProvider implements vscode.DefinitionProvider {
     public provideDefinition(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken): vscode.ProviderResult<vscode.Definition | vscode.DefinitionLink[]> {
-        const range = document.getWordRangeAtPosition(position, /\bt\(["'][^"']*["'].*\)/);
+        const range = document.getWordRangeAtPosition(position, /\bt\(["'][^"']*["'].*\)/);        
         if (!isValidT(range, document)) {
             return [];
         }
-
 
         const targetExpression = document.getText(range);
         const match = /\bt\(["']([^"']*)["'].*\)/.exec(targetExpression);

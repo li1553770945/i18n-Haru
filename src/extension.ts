@@ -4,7 +4,7 @@ import { registerCompletions } from './lsp/completion';
 import { registerDefinition } from './lsp/definition';
 import { registerHover } from './lsp/hover';
 import { registerInlayHints } from './lsp/inlayHint';
-import { addI18nToken, deleteI18nToken, extractUnfinishedItems, implChange } from './util';
+import { addI18nToken, deleteI18nToken, extractUnfinishedItems, implChange, importMessage } from './util';
 import { registerCodeAction } from './lsp/codeAction';
 
 function registerCommand(context: vscode.ExtensionContext) {
@@ -26,6 +26,10 @@ function registerCommand(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('i18n-haru.impl-change-to-origin', (uri) => {
         implChange(uri);
+    });
+
+    vscode.commands.registerCommand('i18n-haru.import-messages', (uri) => {
+        importMessage(uri);
     });
 
     // lsp

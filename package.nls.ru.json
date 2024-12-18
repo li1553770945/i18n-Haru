@@ -18,5 +18,6 @@
     "i18n-haru.translator.name.enum.chatgpt.title": "Выбрать chatgpt",
     "i18n-haru.translator.name.enum.deepseek.title": "Выбрать deepseek",
     "i18n-haru.translator.name.enum.kimi.title": "Выбрать kimi",
-    "i18n-haru.translator.apiKey.title": "API ключ для вызова переводчика"
+    "i18n-haru.translator.apiKey.title": "API ключ для вызова переводчика",
+    "i18n-haru.import-messages.title": "Импортировать i18n сообщения"
 }

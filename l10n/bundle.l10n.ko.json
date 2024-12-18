@@ -33,5 +33,7 @@
     "error.translate.invalid-llm-return-result": "대규모 모델에서 반환된 데이터 구조가 유효하지 않습니다. i18n 메시지 콘텐츠를 수동으로 대규모 모델에 입력하여 번역을 시도하거나 모델을 변경하여 다시 시도하십시오. 현재는 기본 언어의 텍스트를 메시지 콘텐츠로 사용합니다.",
     "warn.translate.llm-lack-code": "대규모 모델은 다음 언어 코드에 대한 번역 결과가 누락되었습니다: {0}. 일시적으로 기본 언어의 메시지 콘텐츠를 사용합니다.",
     "info.command.add-token.use-translator": "{0}을 사용하여 번역 중",
-    "error.translate.action.write-apikey": "apiKey 구성"
+    "error.translate.action.write-apikey": "apiKey 구성",
+    "info.common.open": "열기",
+    "info.common.select-import-source": "가져올 소스 선택"
 }

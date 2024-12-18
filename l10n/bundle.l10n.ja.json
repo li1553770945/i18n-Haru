@@ -33,5 +33,7 @@
     "error.translate.invalid-llm-return-result": "大規模モデルから返されたデータ構造が無効です。i18n メッセージコンテンツを手動で大規模モデルに入力して翻訳するか、モデルを変更して再試行してください。現在は、ベース言語のテキストをメッセージコンテンツとして使用します。",
     "warn.translate.llm-lack-code": "大規模モデルは以下の言語コードの翻訳結果が欠落しています：{0}。一時的にベース言語のメッセージコンテンツを使用します。",
     "info.command.add-token.use-translator": "{0} を使用して翻訳中",
-    "error.translate.action.write-apikey": "apiKey を設定"
+    "error.translate.action.write-apikey": "apiKey を設定",
+    "info.common.open": "開く",
+    "info.common.select-import-source": "インポート元を選択"
 }

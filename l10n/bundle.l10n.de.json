@@ -33,5 +33,7 @@
     "error.translate.invalid-llm-return-result": "Die vom großen Modell zurückgegebene Datenstruktur ist ungültig. Bitte versuchen Sie, den i18n-Nachrichteninhalt manuell in das große Modell einzugeben, um die Übersetzung zu versuchen, oder ändern Sie das Modell und versuchen Sie es erneut. Derzeit wird der Text in der Basissprache als Nachrichteninhalt verwendet.",
     "warn.translate.llm-lack-code": "Das große Modell fehlt die Übersetzung für die folgenden Sprachcodes: {0}. Derzeit wird der Nachrichteninhalt in der Basissprache verwendet.",
     "info.command.add-token.use-translator": "Verwendet {0} für die Übersetzung",
-    "error.translate.action.write-apikey": "apiKey konfigurieren"
+    "error.translate.action.write-apikey": "apiKey konfigurieren",
+    "info.common.open": "Öffnen",
+    "info.common.select-import-source": "Wählen Sie die Importquelle"
 }
