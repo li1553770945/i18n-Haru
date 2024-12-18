@@ -2,10 +2,22 @@
 
 ## 0.0.5
 
+en
+
+- Fix issues with t function matching
+- Add i18n token import functionality
+- Fix the issue where escape characters are doubled during JSON export
 
 zh-cn
 - 修复部分对于 t函数 匹配的问题
 - 新增 i18n token 导入功能
+- 修复导出 json 操作会让转义字符翻倍的问题
+
+ja
+
+- t関数のマッチングに関する問題を修正
+- i18nトークンのインポート機能を追加
+- JSONエクスポート操作でエスケープ文字が倍増する問題を修正
 
 ## 0.0.4
 

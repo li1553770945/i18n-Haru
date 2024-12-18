@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { defaultRange, getDefaultI18nItem, lspLangSelectors } from '../global';
+import { defaultRange, getDefaultI18nItem, GlobalConfig, I18nMapper, lspLangSelectors } from '../global';
 import { isValidT } from '../util';
 
 class I18nProvider implements vscode.DefinitionProvider {
@@ -16,7 +16,7 @@ class I18nProvider implements vscode.DefinitionProvider {
         if (match && match[1] !== undefined) {
             const targetI18nKey = match[1];
             
-            const i18nItem = getDefaultI18nItem();
+            const i18nItem = getDefaultI18nItem(GlobalConfig, I18nMapper);
             if (!i18nItem) {
                 return links;
             }

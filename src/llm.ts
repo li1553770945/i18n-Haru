@@ -2,7 +2,7 @@ import OpenAI from 'openai';
 import * as vscode from 'vscode';
 import { t } from './i18n';
 import { ChatCompletion, ChatCompletionMessageParam } from 'openai/resources';
-import { I18nTextMap } from './global';
+import { I18nMapper } from './global';
 
 
 export const translatePrompt = 'Please translate the value part of the following i18n message into languages corresponding to the language codes {0}, and return them as JSON strings mapped to their respective language codes. Do not include any markdown code blocks or any additional characters:';
@@ -34,7 +34,7 @@ export async function translate(
         return undefined;
     }
 
-    const allCodes = [...I18nTextMap.keys()];
+    const allCodes = [...I18nMapper.keys()];
     const completePrompt = translatePrompt.replace('{0}', allCodes.join(',')) + '\n' + '"' + messageContent + '"';
     const messages: ChatCompletionMessageParam[] = [
         { role: "system", content: "You are a helpful assistant." },

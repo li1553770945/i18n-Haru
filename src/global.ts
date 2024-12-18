@@ -42,7 +42,20 @@ export interface I18nTextItem {
 /**
  * @description 用于管理全局 i18n message 的数据结构，key 为 ISO code
  */
-export const I18nTextMap: Map<string, I18nTextItem> = new Map();
+export const I18nMapper: Map<string, I18nTextItem> = new Map();
+
+
+// 用于 import 功能的中间变量
+export const ImportConfig: IGlobalConfig = {
+    root: 'i18n',
+    main: 'zh-cn',
+    display: '',
+    parseMode: 'json',
+    workspacePath: ''
+}
+
+export const ImportI18nMapper: Map<string, I18nTextItem> = new Map();
+
 
 export async function updateAll() {
     const i18nSetting = vscode.workspace.getConfiguration('i18n-haru');
@@ -54,6 +67,7 @@ export async function updateAll() {
     } 
 
     GlobalConfig.root = root;
+    
     let main = i18nSetting.get<string>('main') || 'zh-cn';
     
     if (main.toLowerCase() === 'zh') {
@@ -67,9 +81,11 @@ export async function updateAll() {
         display = main;
     }
     GlobalConfig.display = display;
-    GlobalConfig.parseMode = i18nSetting.get<IParseMode>('lang') || 'json';
 
-    await updateI18nFromRoot();
+    // TODO: 支持更多语言的适配
+    GlobalConfig.parseMode = i18nSetting.get<IParseMode>('lang') || 'json';
+    const configuration = vscode.workspace.getConfiguration('i18n-haru');
+    await updateMapper(GlobalConfig, I18nMapper, configuration);
 }
 
 export async function initialise(context: vscode.ExtensionContext) {
@@ -89,7 +105,7 @@ export async function initialise(context: vscode.ExtensionContext) {
         await updateAll();
 
         // 初始化 诊断器
-        for (const [_, item] of I18nTextMap.entries()) {
+        for (const [_, item] of I18nMapper.entries()) {
             await jsonSuggestor.lint(item.file);
         }
 
@@ -118,7 +134,7 @@ export async function initialise(context: vscode.ExtensionContext) {
             }
 
             const i18nFiles: string[] = [];
-            const parseSuffixs = getParseSuffix();
+            const parseSuffixs = getParseSuffix(GlobalConfig);
 
             for (const file of fs.readdirSync(GlobalConfig.root)) {
                 let extname = file.split('.').at(-1);
@@ -146,9 +162,9 @@ export async function initialise(context: vscode.ExtensionContext) {
 
             for (const file of i18nRootFiles) {
                 const filename = path.basename(file);
-                const i18nTextItem = await makeI18nTextItem(filename, prefix, customMapping);
+                const i18nTextItem = await makeI18nTextItem(filename, prefix, customMapping, GlobalConfig);
                 if (i18nTextItem) {
-                    I18nTextMap.set(i18nTextItem.code, i18nTextItem);
+                    I18nMapper.set(i18nTextItem.code, i18nTextItem);
                 }
             }
         });
@@ -164,12 +180,12 @@ export async function initialise(context: vscode.ExtensionContext) {
             const i18nRootFilesSet = new Set<string>(i18nRootFiles);
 
             const deleteCodes = [];
-            for (const [code, item] of I18nTextMap.entries()) {
+            for (const [code, item] of I18nMapper.entries()) {
                 if (i18nRootFilesSet.has(item.file)) {
                     deleteCodes.push(code);
                 }
             }
-            deleteCodes.forEach(code => I18nTextMap.delete(code));
+            deleteCodes.forEach(code => I18nMapper.delete(code));
         });
 
         // i18n 文件发生变化时，暂时不考虑 rename 的问题
@@ -177,25 +193,25 @@ export async function initialise(context: vscode.ExtensionContext) {
             const filePath = event.document.uri.fsPath;
             if (filePath.startsWith(GlobalConfig.root)) {
                 const extname = path.extname(filePath).slice(1).toLowerCase();
-                const parseSuffixs = getParseSuffix();
+                const parseSuffixs = getParseSuffix(GlobalConfig);
                 if (parseSuffixs !== undefined && !parseSuffixs.includes(extname)) {
                     return;
                 }
                 // 在已有的数据结构中找到和这个路径一致的 item
                 // 因为 i18n 文件数量绝对不会超过1000，所以直接 for 循环几乎不影响性能
                 const items = [];
-                for (const item of I18nTextMap.values()) {
+                for (const item of I18nMapper.values()) {
                     if (item.file === filePath) {
                         items.push(item);
                         break;
                     }
                 }
 
-                const res = await parseFileByParseMode(filePath);
+                const res = await parseFileByParseMode(filePath, GlobalConfig);
                 
                 if (items.length > 0 && res) {
                     const code = items[0].code;
-                    I18nTextMap.set(code, {
+                    I18nMapper.set(code, {
                         code,
                         file: filePath,
                         content: res.content,
@@ -205,7 +221,7 @@ export async function initialise(context: vscode.ExtensionContext) {
                     // 诊断
                     if (code === GlobalConfig.main) {
                         // 主语言需要刷新所有的 code
-                        for (const [_, item] of I18nTextMap.entries()) {
+                        for (const [_, item] of I18nMapper.entries()) {
                             await jsonSuggestor.lint(item.file);
                         }
                     } else {
@@ -252,7 +268,9 @@ export async function configureI18nFolder(context: vscode.ExtensionContext) {
     const targetFolder = res[0].fsPath;
     if (fs.existsSync(targetFolder)) {
         GlobalConfig.root = targetFolder;
-        updateI18nFromRoot();
+        const configuration = vscode.workspace.getConfiguration('i18n-haru');
+
+        updateMapper(GlobalConfig, I18nMapper, configuration);
 
         const settingPath = path.join(GlobalConfig.workspacePath, '.vscode', 'settings.json');
         const originSetting = JSON.parse(fs.readFileSync(settingPath, { encoding: 'utf-8' }));
@@ -267,9 +285,12 @@ export async function configureI18nFolder(context: vscode.ExtensionContext) {
 
 
 
-async function parseFileByParseMode(filepath: string): Promise<ParseResult | undefined> {
+async function parseFileByParseMode(
+    filepath: string,
+    config: IGlobalConfig
+): Promise<ParseResult | undefined> {
     const filecontent = fs.readFileSync(filepath, { encoding: 'utf-8' });
-    switch (GlobalConfig.parseMode) {
+    switch (config.parseMode) {
         case 'json':
             return await parseJson(filepath);
 
@@ -302,8 +323,8 @@ function getISO639Code(filename: string) {
     return undefined;
 }
 
-function getParseSuffix() {
-    switch (GlobalConfig.parseMode) {
+function getParseSuffix(config: IGlobalConfig) {
+    switch (config.parseMode) {
         case 'json':
             return ['json'];
         case 'yaml':
@@ -331,13 +352,28 @@ function longestCommonPrefix(strs: string[]): string {
     return prefix;
 }
 
-async function updateI18nFromRoot() {
-    const root = GlobalConfig.root;
+export interface IConfigurationLike {
+    get<T>(section: string): T | undefined;
+	get<T>(section: string, defaultValue: T): T;
+}
+
+/**
+ * @description 根据输入的配置文件进行 IO 并更新映射器
+ * @param config 
+ * @param mapper 
+ * @returns 
+ */
+export async function updateMapper(
+    config: IGlobalConfig,
+    mapper: Map<string, I18nTextItem>,
+    configuration: IConfigurationLike
+) {
+    const root = config.root;
     if (!fs.existsSync(root)) {
         return;
     }
 
-    const parseSuffixs = getParseSuffix();
+    const parseSuffixs = getParseSuffix(config);
 
     // 得到所有的 i18n 配置文件，必须是 i18n-haru.lang 中设置的后缀，默认为 json
     const i18nFiles: string[] = [];
@@ -361,17 +397,16 @@ async function updateI18nFromRoot() {
     });
 
     // 从计算得到的映射中读取 i18n 配置并载入全局变量
-    const i18nSetting = vscode.workspace.getConfiguration('i18n-haru');
-    const customMapping: Record<string, string> = clearCustomMapping(i18nSetting.get('custom-language-mapping'));
+    const customMapping: Record<string, string> = clearCustomMapping(configuration.get('custom-language-mapping'));
 
     const _ = await vscode.window.withProgress({
         title: t('info.update-i18n.parse-iso.title'),
         location: vscode.ProgressLocation.Window
     }, async (progress: vscode.Progress<{ message: string, increment: number }>, token: vscode.CancellationToken) => {
         for (const file of i18nFiles) {
-            const i18nTextItem = await makeI18nTextItem(file, prefix, customMapping);
+            const i18nTextItem = await makeI18nTextItem(file, prefix, customMapping, config);
             if (i18nTextItem && i18nTextItem.code.length > 0) {
-                I18nTextMap.set(i18nTextItem.code, i18nTextItem);
+                mapper.set(i18nTextItem.code, i18nTextItem);
             }
         }
 
@@ -380,9 +415,9 @@ async function updateI18nFromRoot() {
             try {
                 const customPath = customMapping[code];
                 const realCode = code === 'zh' ? 'zh-cn' : code;
-                const res = await parseFileByParseMode(customPath);
+                const res = await parseFileByParseMode(customPath, config);
                 if (res) {
-                    I18nTextMap.set(realCode, {
+                    mapper.set(realCode, {
                         code: realCode,
                         file: customPath,
                         content: res.content,
@@ -434,8 +469,8 @@ function clearCustomMapping(customMapping?: Record<string, any>): Record<string,
 
 let remindUserErrorMain: boolean = false;
 
-function getFirstOneI18nItem() {
-    for (const item of I18nTextMap.values()) {
+function getFirstOneI18nItem(mapper: Map<string, I18nTextItem>) {
+    for (const item of mapper.values()) {
         return item;
     }
     
@@ -448,9 +483,14 @@ function getFirstOneI18nItem() {
  * @param prefix 公共前缀
  * @returns 
  */
-async function makeI18nTextItem(filename: string, prefix: string, customMapping: Record<string, string>): Promise<I18nTextItem | undefined> {
+async function makeI18nTextItem(
+    filename: string,
+    prefix: string,
+    customMapping: Record<string, string>,
+    config: IGlobalConfig
+): Promise<I18nTextItem | undefined> {
     let validFileString = filename.slice(prefix.length);
-    const filePath = path.join(GlobalConfig.root, filename);
+    const filePath = path.join(config.root, filename);
 
     const extname = filename.split('.').at(-1);
     if (extname === undefined || extname.length === 0) {
@@ -478,7 +518,7 @@ async function makeI18nTextItem(filename: string, prefix: string, customMapping:
         }
         return undefined;
     }
-    const res = await parseFileByParseMode(filePath);
+    const res = await parseFileByParseMode(filePath, config);
 
     if (res) {
         return {
@@ -491,12 +531,17 @@ async function makeI18nTextItem(filename: string, prefix: string, customMapping:
     return undefined
 }
 
+/**
+ * @description 输入文件变动事件，返回所有变动文件中存在于 i18n-haru.root 下的文件
+ * @param event 
+ * @returns 
+ */
 function getI18nFilesFromEvent(event: { files: readonly vscode.Uri[] }) {
     const i18nRootFiles = [];
     for (const file of event.files) {
         if (file.fsPath.startsWith(GlobalConfig.root)) {
             const extname = path.extname(file.fsPath).slice(1).toLowerCase();
-            const parseSuffixs = getParseSuffix();
+            const parseSuffixs = getParseSuffix(GlobalConfig);
             if (parseSuffixs !== undefined && !parseSuffixs.includes(extname)) {
                 continue;
             }
@@ -506,21 +551,24 @@ function getI18nFilesFromEvent(event: { files: readonly vscode.Uri[] }) {
     return i18nRootFiles;
 }
 
-export function getDefaultI18nItem() {
+/**
+ * @description 从映射器中获取默认语言对应的 i18n
+ * @returns 
+ */
+export function getDefaultI18nItem(config: IGlobalConfig, mapper: Map<string, I18nTextItem>) {
     // 调用这个函数的时候，比如 inlay hints，初始化还未完成，所以需要额外手动赋值一次 main
     const i18nSetting = vscode.workspace.getConfiguration('i18n-haru');
     let main = i18nSetting.get<string>('main') || 'zh-cn';
     
     if (main.toLowerCase() === 'zh') {
         main = 'zh-cn';
-    }
-    GlobalConfig.main = main.toLowerCase();
-
-    const item = I18nTextMap.get(main);
+    }    
+    config.main = main.toLowerCase();
+    const item = mapper.get(main);
     
     if (item === undefined) {
 
-        const firstOne = getFirstOneI18nItem();
+        const firstOne = getFirstOneI18nItem(mapper);
         if (firstOne === undefined) {
             return undefined;
         }
@@ -534,7 +582,11 @@ export function getDefaultI18nItem() {
     }
 }
 
-export function getDisplayI18nItem() {
+/**
+ * @description 从映射器中获取默认用于渲染文本的语言对应的 i18n
+ * @returns 
+ */
+export function getDisplayI18nItem(config: IGlobalConfig, mapper: Map<string, I18nTextItem>) {
     // 调用这个函数的时候，比如 inlay hints，初始化还未完成，所以需要额外手动赋值一次 main
     const i18nSetting = vscode.workspace.getConfiguration('i18n-haru');
     let display = i18nSetting.get<string>('display') || 'zh-cn';
@@ -542,13 +594,13 @@ export function getDisplayI18nItem() {
     if (display.toLowerCase() === 'zh') {
         display = 'zh-cn';
     }
-    GlobalConfig.display = display.toLowerCase();
+    config.display = display.toLowerCase();
 
-    const item = I18nTextMap.get(display);
+    const item = mapper.get(display);
     
     if (item === undefined) {
 
-        const firstOne = getFirstOneI18nItem();
+        const firstOne = getFirstOneI18nItem(mapper);
         if (firstOne === undefined) {
             return undefined;
         }

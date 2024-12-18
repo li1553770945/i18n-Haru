@@ -35,5 +35,9 @@
     "info.command.add-token.use-translator": "正在使用 {0} 进行翻译",
     "error.translate.action.write-apikey": "配置 apiKey",
     "info.common.open": "打开",
-    "info.common.select-import-source": "选择导入源"
+    "info.common.select-import-source": "选择导入源",
+    "error.common.please-select-setting.json": "请选择需要导入项目的 .vscode/setting.json 文件！",
+    "error.common.cannot-parse-setting.json": "无法解析 setting.json ！",
+    "info.common.import-i18n-message": "导入 i18n message",
+    "info.common.import-i18n-message.placeholder": "选择需要导入的 message"
 }

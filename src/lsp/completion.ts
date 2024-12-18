@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { defaultRange, getDefaultI18nItem, I18nTextMap, lspLangSelectors } from '../global';
+import { defaultRange, getDefaultI18nItem, GlobalConfig, I18nMapper, lspLangSelectors } from '../global';
 import { isValidT, parseMessageParameters } from '../util';
 import { t } from '../i18n';
 
@@ -16,7 +16,7 @@ class I18nProvider implements vscode.CompletionItemProvider {
 
         if (match && match[1] !== undefined) {
             const targetI18nKey = match[1];
-            const i18nItem = getDefaultI18nItem();
+            const i18nItem = getDefaultI18nItem(GlobalConfig, I18nMapper);
             if (!i18nItem) {
                 return items;
             }
@@ -61,7 +61,7 @@ class I18nAllProvider implements vscode.CompletionItemProvider {
         const items: vscode.CompletionItem[] = [];
         
         const targetI18nKey = '';
-        const i18nItem = getDefaultI18nItem();
+        const i18nItem = getDefaultI18nItem(GlobalConfig, I18nMapper);
         if (!i18nItem) {
             return items;
         }
@@ -89,7 +89,7 @@ class I18nAllProvider implements vscode.CompletionItemProvider {
 export function makeI18nKeyProfile(i18nKey: string, targetContent: string): string {
     let profileContent = '';
 
-    for (const [langCode, item] of I18nTextMap.entries()) {
+    for (const [langCode, item] of I18nMapper.entries()) {
         let content = item.content[i18nKey];
         const uri = vscode.Uri.file(item.file);
         const range = item.keyRanges.get(i18nKey) || defaultRange;

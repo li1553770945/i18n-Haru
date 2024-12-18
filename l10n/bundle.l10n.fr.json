@@ -35,5 +35,9 @@
     "info.command.add-token.use-translator": "Utilisation de {0} pour la traduction",
     "error.translate.action.write-apikey": "Configurer la clé api",
     "info.common.open": "Ouvrir",
-    "info.common.select-import-source": "Sélectionnez la source d'importation"
+    "info.common.select-import-source": "Sélectionnez la source d'importation",
+    "error.common.please-select-setting.json": "Veuillez sélectionner le fichier .vscode/setting.json à importer dans le projet !",
+    "error.common.cannot-parse-setting.json": "Impossible d'analyser setting.json !",
+    "info.common.import-i18n-message": "Importer le message i18n",
+    "info.common.import-i18n-message.placeholder": "Sélectionnez le message à importer"
 }

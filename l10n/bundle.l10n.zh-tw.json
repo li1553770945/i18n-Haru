@@ -35,5 +35,9 @@
     "info.command.add-token.use-translator": "正在使用 {0} 進行翻譯",
     "error.translate.action.write-apikey": "配置 apiKey",
     "info.common.open": "打開",
-    "info.common.select-import-source": "選擇匯入來源"
+    "info.common.select-import-source": "選擇匯入來源",
+    "error.common.please-select-setting.json": "請選擇需要匯入專案的 .vscode/setting.json 檔案！",
+    "error.common.cannot-parse-setting.json": "無法解析 setting.json ！",
+    "info.common.import-i18n-message": "匯入 i18n 訊息",
+    "info.common.import-i18n-message.placeholder": "選擇需要匯入的訊息"
 }

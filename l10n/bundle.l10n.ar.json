@@ -35,5 +35,9 @@
     "info.command.add-token.use-translator": "يتم استخدام {0} للترجمة",
     "error.translate.action.write-apikey": "تكوين مفتاح api",
     "info.common.open": "فتح",
-    "info.common.select-import-source": "اختر المصدر للاستيراد"
+    "info.common.select-import-source": "اختر المصدر للاستيراد",
+    "error.common.please-select-setting.json": "الرجاء تحديد ملف .vscode/setting.json للاستيراد إلى المشروع!",
+    "error.common.cannot-parse-setting.json": "تعذر تحليل setting.json!",
+    "info.common.import-i18n-message": "استيراد رسالة i18n",
+    "info.common.import-i18n-message.placeholder": "اختر الرسائل التي تريد استيرادها"
 }

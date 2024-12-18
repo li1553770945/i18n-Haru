@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { configureI18nFolder, I18nTextMap, initialise } from './global';
+import { configureI18nFolder, I18nMapper, initialise } from './global';
 import { registerCompletions } from './lsp/completion';
 import { registerDefinition } from './lsp/definition';
 import { registerHover } from './lsp/hover';
@@ -45,7 +45,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World from i18n Haru!');
 	});
     
-    await initialise(context);
+    await initialise(context);    
     registerCommand(context);
 
 	context.subscriptions.push(disposable);

@@ -84,8 +84,8 @@
             {
                 "command": "i18n-haru.import-messages",
                 "icon": {
-                    "dark": "icons/dark/i18n-import",
-                    "light": "icons/light/i18n-import"
+                    "dark": "icons/dark/i18n-import.svg",
+                    "light": "icons/light/i18n-import.svg"
                 },
                 "title": "%i18n-haru.import-messages.title%"
             }
@@ -173,7 +173,7 @@
                 },
                 {
                     "command": "i18n-haru.import-messages",
-                    "when": "resourceFilename == 'i18n-Haru.json'",
+                    "when": "editorLangId == json && resourceFilename != 'i18n-Haru.json'",
                     "group": "navigation@4"
                 }
             ]

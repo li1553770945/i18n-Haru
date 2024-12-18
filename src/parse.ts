@@ -81,3 +81,17 @@ export async function parseYaml(filepath: string): Promise<ParseResult> {
     
     return { content, keyRanges };
 }
+
+// 对于特殊字符的转义
+export function saveJsonReplacer(key: string, value: any): any {
+    if (typeof value === 'string') {
+        return value
+            .replace(/\\"/g, '"') // 将 \" 替换为 "
+            .replace(/\\\\n/g, '\\n') // 将 \\n 替换为 \n
+            .replace(/\\\\t/g, '\\t') // 将 \\t 替换为 \t
+            .replace(/\\\\r/g, '\\r') // 将 \\r 替换为 \r
+            .replace(/\\\\f/g, '\\f') // 将 \\f 替换为 \f
+            .replace(/\\\\b/g, '\\b'); // 将 \\b 替换为 \b
+    }
+    return value;   
+}

@@ -35,5 +35,9 @@
     "info.command.add-token.use-translator": "{0}을 사용하여 번역 중",
     "error.translate.action.write-apikey": "apiKey 구성",
     "info.common.open": "열기",
-    "info.common.select-import-source": "가져올 소스 선택"
+    "info.common.select-import-source": "가져올 소스 선택",
+    "error.common.please-select-setting.json": "프로젝트로 가져올 .vscode/setting.json 파일을 선택하세요!",
+    "error.common.cannot-parse-setting.json": "setting.json을 파싱할 수 없습니다!",
+    "info.common.import-i18n-message": "i18n 메시지 가져오기",
+    "info.common.import-i18n-message.placeholder": "가져올 메시지를 선택하세요"
 }

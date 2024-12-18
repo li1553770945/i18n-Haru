@@ -35,5 +35,9 @@
     "info.command.add-token.use-translator": "Using {0} for translation",
     "error.translate.action.write-apikey": "Configure apiKey",
     "info.common.open": "Open",
-    "info.common.select-import-source": "Select the import source"
+    "info.common.select-import-source": "Select the import source",
+    "error.common.please-select-setting.json": "Please select the .vscode/setting.json file to import into the project!",
+    "error.common.cannot-parse-setting.json": "Unable to parse setting.json!",
+    "info.common.import-i18n-message": "Import i18n message",
+    "info.common.import-i18n-message.placeholder": "Select the message to be imported"
 }

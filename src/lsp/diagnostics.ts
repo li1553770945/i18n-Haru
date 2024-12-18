@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { defaultRange, getDefaultI18nItem, GlobalConfig, I18nTextMap } from '../global';
+import { defaultRange, getDefaultI18nItem, GlobalConfig, I18nMapper } from '../global';
 import { t } from '../i18n';
 
 export enum JsonSuggest {
@@ -18,7 +18,7 @@ class I18nJsonDiagnostic {
             return;
         }
         const items = [];
-        for (const [_, item] of I18nTextMap.entries()) {
+        for (const [_, item] of I18nMapper.entries()) {
             if (item.file === filepath) {
                 items.push(item);
                 break;
@@ -30,7 +30,7 @@ class I18nJsonDiagnostic {
         }
 
         const targetI18n = items[0];
-        const i18nItem = getDefaultI18nItem();
+        const i18nItem = getDefaultI18nItem(GlobalConfig, I18nMapper);
         if (i18nItem === undefined) {
             vscode.window.showErrorMessage(t('error.command.add-token.cannot-get-default-i18n-item'));
             return;

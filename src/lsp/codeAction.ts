@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { JsonSuggest } from './diagnostics';
-import { getDefaultI18nItem, GlobalConfig, i18nFileSelectors, I18nTextMap, lspLangSelectors } from '../global';
+import { getDefaultI18nItem, GlobalConfig, i18nFileSelectors, I18nMapper, lspLangSelectors } from '../global';
 import { t } from '../i18n';
 
 class I18nJsonProvider implements vscode.CodeActionProvider {
@@ -39,7 +39,7 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
             return fixes;
         }
         const items = [];
-        for (const [_, item] of I18nTextMap.entries()) {
+        for (const [_, item] of I18nMapper.entries()) {
             if (item.file === filepath) {
                 items.push(item);
                 break;
@@ -51,7 +51,7 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
         }
 
         const targetI18n = items[0];
-        const i18nItem = getDefaultI18nItem();
+        const i18nItem = getDefaultI18nItem(GlobalConfig, I18nMapper);
         if (i18nItem === undefined) {
             vscode.window.showErrorMessage(t('error.command.add-token.cannot-get-default-i18n-item'));
             return fixes;
@@ -86,7 +86,7 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
         ); 
 
         const allEdit = new vscode.WorkspaceEdit();
-        for (const [code, item] of I18nTextMap.entries()) {
+        for (const [code, item] of I18nMapper.entries()) {
             if (code === GlobalConfig.main) {
                 continue;
             }
@@ -130,7 +130,7 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
             return fixes;
         }
         const items = [];
-        for (const [_, item] of I18nTextMap.entries()) {
+        for (const [_, item] of I18nMapper.entries()) {
             if (item.file === filepath) {
                 items.push(item);
                 break;
@@ -142,7 +142,7 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
         }
 
         const targetI18n = items[0];
-        const i18nItem = getDefaultI18nItem();
+        const i18nItem = getDefaultI18nItem(GlobalConfig, I18nMapper);
         if (i18nItem === undefined) {
             vscode.window.showErrorMessage(t('error.command.add-token.cannot-get-default-i18n-item'));
             return fixes;
@@ -177,7 +177,7 @@ class I18nJsonProvider implements vscode.CodeActionProvider {
         ); 
 
         const allEdit = new vscode.WorkspaceEdit();
-        for (const [code, item] of I18nTextMap.entries()) {
+        for (const [code, item] of I18nMapper.entries()) {
             if (code === GlobalConfig.main) {
                 continue;
             }

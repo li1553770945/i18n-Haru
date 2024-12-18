@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { getDefaultI18nItem, getDisplayI18nItem, I18nTextItem, lspLangSelectors } from '../global';
+import { getDisplayI18nItem, GlobalConfig, I18nMapper, I18nTextItem, lspLangSelectors } from '../global';
 import { makeI18nKeyProfile } from './completion';
 import { isValidT } from '../util';
 import { t } from '../i18n';
@@ -14,16 +14,16 @@ class I18nProvider implements vscode.InlayHintsProvider {
         
         const visibleRange = activeEditor.visibleRanges[0];
         const inlayHints: vscode.InlayHint[] = [];
-        const i18nItem = getDisplayI18nItem();
+        const i18nItem = getDisplayI18nItem(GlobalConfig, I18nMapper);
         
         if (!i18nItem) {
             return undefined;
         }
         
-        // -+ 3 稍微优化一下加载
-        const visibleMargin = 0;
+        // -+ visibleMargin 稍微优化一下加载
+        const visibleMargin = 10;
         const lineStart = Math.max(visibleRange.start.line - visibleMargin, 0);
-        const lineEnd = visibleRange.end.line + visibleMargin;        
+        const lineEnd = Math.min(visibleRange.end.line + visibleMargin, document.lineCount - 1); 
         const maxHintLength = vscode.workspace.getConfiguration('i18n-haru').get<number>('line-hint-max-length') || 10;
 
         for (let line = lineStart; line <= lineEnd; ++ line) {            
@@ -38,10 +38,7 @@ class I18nProvider implements vscode.InlayHintsProvider {
                 inlayHints.push(...hints);                    
             }
         }
-        
-        console.log('total inlay hints', inlayHints);
-        
-        
+                
         return inlayHints;
     }
 }

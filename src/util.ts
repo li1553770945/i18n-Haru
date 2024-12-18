@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { currentTranslation, getDefaultI18nItem, I18nTextMap, updateAll } from './global';
+import { currentTranslation, getDefaultI18nItem, GlobalConfig, I18nMapper, ImportConfig, ImportI18nMapper, updateAll, updateMapper } from './global';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -8,6 +8,7 @@ import * as langs from 'langs';
 import { t } from './i18n';
 import { LlmName, translate } from './llm';
 import { registerInlayHints } from './lsp/inlayHint';
+import { saveJsonReplacer } from './parse';
 
 export function detectLanguageISO(text: string): string {
     // 使用 franc 检测语言
@@ -88,7 +89,7 @@ function makeTranslationPrompt(code: string, unfinished: Record<string, string>)
 
 function findI18nItemByUri(uri: vscode.Uri) {
     // 先找到 uri 对应的 i18n item
-    for (const item of I18nTextMap.values()) {
+    for (const item of I18nMapper.values()) {
         if (item.file === uri.fsPath) {
             return item;
         }
@@ -103,7 +104,7 @@ export async function addI18nToken(context: vscode.ExtensionContext) {
         return; // 如果没有活动编辑器，则返回
     }
 
-    const i18nItem = getDefaultI18nItem();
+    const i18nItem = getDefaultI18nItem(GlobalConfig, I18nMapper);
     if (!i18nItem) {
         vscode.window.showErrorMessage(t('error.command.add-token.cannot-get-default-i18n-item'));
         return;
@@ -184,10 +185,10 @@ export async function addI18nToken(context: vscode.ExtensionContext) {
             translateMessages[i18nItem.code] = selectedText;
 
             // 加载，写入，重新解析
-            for (const [code, item] of I18nTextMap.entries()) {
+            for (const [code, item] of I18nMapper.entries()) {
                 const translation = translateMessages[code];
                 item.content[tokeName] = translation;
-                fs.writeFileSync(item.file, JSON.stringify(item.content, null, '    '));
+                fs.writeFileSync(item.file, JSON.stringify(item.content, saveJsonReplacer, '    '));
             }
 
             await updateAll();
@@ -234,7 +235,7 @@ interface I18nQuickItem extends vscode.QuickPickItem {
 }
 
 export async function deleteI18nToken(context: vscode.ExtensionContext) {
-    const i18nItem = getDefaultI18nItem();
+    const i18nItem = getDefaultI18nItem(GlobalConfig, I18nMapper);
     if (!i18nItem) {
         vscode.window.showErrorMessage(t('error.command.add-token.cannot-get-default-i18n-item'));
         return;
@@ -256,9 +257,9 @@ export async function deleteI18nToken(context: vscode.ExtensionContext) {
     });
     
     if (res !== undefined) {
-        for (const [_, item] of I18nTextMap.entries()) {
+        for (const [_, item] of I18nMapper.entries()) {
             delete item.content[res.token];
-            fs.writeFileSync(item.file, JSON.stringify(item.content, null, '    '));
+            fs.writeFileSync(item.file, JSON.stringify(item.content, saveJsonReplacer, '    '));
         }
     }
 }
@@ -292,7 +293,7 @@ export async function implChange(uri: vscode.Uri) {
         return;
     }
     // 将当前临时文件内的玩意儿覆盖进 i18n 文件
-    const i18nItem = I18nTextMap.get(currentTranslation.code);
+    const i18nItem = I18nMapper.get(currentTranslation.code);
     if (!i18nItem) {
         return;
     }
@@ -305,7 +306,7 @@ export async function implChange(uri: vscode.Uri) {
                 const translation = json[message] as string;
                 i18nItem.content[message] = translation;
             }
-            fs.writeFileSync(i18nItem.file, JSON.stringify(i18nItem.content, null, '  '));
+            fs.writeFileSync(i18nItem.file, JSON.stringify(i18nItem.content, saveJsonReplacer, '  '));
         } catch (error) {
             vscode.window.showErrorMessage(t('error.command.impl-change.parse-json', `${error}`));
         }
@@ -378,7 +379,7 @@ export async function importMessage(uri: vscode.Uri) {
         canSelectMany: false,
         canSelectFolders: false,
         filters: {
-            'json': ['json']
+            'settings.json': ['json']
         }
     });
 
@@ -386,6 +387,99 @@ export async function importMessage(uri: vscode.Uri) {
         return;
     }
 
-    const settingPath = res[0].fsPath;
+    const settingPath = res[0].fsPath;    
+    // 确保路径有效性
+    if (!settingPath.endsWith('settings.json')) {
+        vscode.window.showErrorMessage(t('error.common.please-select-setting.json'));
+        return;
+    }
+
+    const dotVscodePath = path.dirname(settingPath);    
+    if (!dotVscodePath.endsWith('.vscode')) {
+        vscode.window.showErrorMessage(t('error.common.please-select-setting.json'));
+        return;
+    }
+
+    let root = 'i18n';
+    let main = GlobalConfig.main;
+    let display = GlobalConfig.display;
+    let parseMode = GlobalConfig.parseMode;
+    const configuration = new Map<string, any>();
+
+    try {
+        const settingJson = JSON.parse(fs.readFileSync(settingPath, { encoding: 'utf-8' }));
+        root = settingJson['i18n-haru.root'] || root;
+        main = settingJson['i18n-haru.main'] || main;
+        display = settingJson['i18n-haru.display'] || display;
+        parseMode = settingJson['i18n-haru.format'] || parseMode;
+        if (settingJson['i18n-haru.custom-language-mapping']) {
+            configuration.set('custom-language-mapping', settingJson['i18n-haru.custom-language-mapping']);
+        }
+    } catch (error) {
+        vscode.window.showErrorMessage(t('error.common.cannot-parse-setting.json'));
+        return;
+    }
+
+    const importPrjWorkspacePath = path.dirname(dotVscodePath);
+    ImportConfig.workspacePath = importPrjWorkspacePath;
+
+    root = path.resolve(importPrjWorkspacePath, root);
+    ImportConfig.root = root;
+
+    // ImportConfig 渲染配置直接默认和 Global 一致
+    ImportConfig.main = main;
+    ImportConfig.display = display;
+
+    // TODO: 支持更多语言的适配
+    ImportConfig.parseMode = GlobalConfig.parseMode;
+
+    // 将外部 i18n mesage 载入 Import 映射器中
+    await updateMapper(ImportConfig, ImportI18nMapper, configuration);
+
+    // 让用户选择需要导入的 message
+    const i18nItem = getDefaultI18nItem(ImportConfig, ImportI18nMapper);
     
+    if (!i18nItem) {
+        vscode.window.showErrorMessage(t('error.command.add-token.cannot-get-default-i18n-item'));
+        return;
+    }
+    
+    const quickItems: I18nQuickItem[] = [];
+    for (const token of Object.keys(i18nItem.content)) {
+        let content = i18nItem.content[token];
+        quickItems.push({
+            label: '$(i18n-icon) ' + token,
+            token: token,
+            detail: content
+        });
+    }
+
+    const messages = await vscode.window.showQuickPick(quickItems, {
+        title: t('info.common.import-i18n-message'),
+        placeHolder: t('info.common.import-i18n-message.placeholder'),
+        canPickMany: true,
+        ignoreFocusOut: true
+    });
+
+    if (messages !== undefined) {
+        // 遍历主映射器，更新并写入磁盘
+        for (const [_, item] of I18nMapper.entries()) {
+            // TODO: 支持选项来让用户决定是否要进行覆盖，现在默认不覆盖
+            // 以当前项目为基准，多出的语言不管，少的语言默认按照导入源的 main 进行赋值
+            const code = item.code;
+            const sourceI18nItem = ImportI18nMapper.get(code) || i18nItem;
+            for (const message of messages) {
+                const importKey = message.token;
+                if (item.content[importKey]) {
+                    continue;
+                }
+                const importContent = sourceI18nItem.content[importKey] || '';
+                item.content[importKey] = importContent;
+            }
+
+            fs.writeFileSync(item.file, JSON.stringify(item.content, saveJsonReplacer, '    '));
+            // TODO: 添加功能，允许提醒用户是否需要自动完成缺失部分的翻译
+            // 检查该功能的出现频次
+        }
+    }
 }
