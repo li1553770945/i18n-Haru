@@ -87,6 +87,13 @@ export async function translate(
     }
 
     console.log('[debug] llm message: ' + message);
+
+    // 尝试提取内部的 json（如果开头不是 { 的话）
+    if (!message.startsWith('{') || !message.endsWith('}')) {
+        const firstBrackIndex = message.indexOf('{');
+        const lastBrackIndex = message.lastIndexOf('}');
+        message = message.substring(firstBrackIndex, lastBrackIndex + 1);
+    }
     
     try {
         const json = JSON.parse(message);
@@ -107,6 +114,8 @@ export async function translate(
         }
         return alignMessages;
     } catch (error) {
+        console.log(error);
+        
         vscode.window.showErrorMessage(t('error.translate.invalid-llm-return-result'));
         const noneMessages: Record<string, string> = {};
         for (const code of allCodes) {
