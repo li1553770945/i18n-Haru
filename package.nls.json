@@ -19,5 +19,6 @@
     "i18n-haru.translator.name.enum.deepseek.title": "Select deepseek",
     "i18n-haru.translator.name.enum.kimi.title": "Select kimi",
     "i18n-haru.translator.apiKey.title": "API KEY for calling the translator",
+    "i18n-haru.translator-apiKey.title": "API KEY for calling the translator",
     "i18n-haru.import-messages.title": "Import i18n messages"
 }

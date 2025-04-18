@@ -19,5 +19,6 @@
     "i18n-haru.translator.name.enum.deepseek.title": "选择 deepseek",
     "i18n-haru.translator.name.enum.kimi.title": "选择 kimi",
     "i18n-haru.translator.apiKey.title": "调用翻译器的 API KEY",
+    "i18n-haru.translator-apiKey.title": "调用翻译器的 API KEY",
     "i18n-haru.import-messages.title": "导入 i18n message"
 }
